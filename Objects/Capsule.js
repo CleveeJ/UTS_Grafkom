@@ -18,7 +18,8 @@ export class Capsule {
     childs = [];
 
     constructor(GL, SHADER_PROGRAM, _position, _color,
-                radius = 1, height = 2, slices = 20, stacks = 10,
+                radiusX = 1, radiusY = 1, radiusZ = 1,
+                height = 2, slices = 20, stacks = 10,
                 colorValue = [1, 1, 1]) {
         this.GL = GL;
         this.SHADER_PROGRAM = SHADER_PROGRAM;
@@ -33,8 +34,8 @@ export class Capsule {
         for (let y = -halfH; y <= halfH; y += height / stacks) {
             for (let slice = 0; slice <= slices; slice++) {
                 let theta = 2 * Math.PI * slice / slices;
-                let x = radius * Math.cos(theta);
-                let z = radius * Math.sin(theta);
+                let x = radiusX * Math.cos(theta);
+                let z = radiusZ * Math.sin(theta);
                 this.vertex.push(x, y, z, colorValue[0], colorValue[1], colorValue[2]);
             }
         }
@@ -46,9 +47,9 @@ export class Capsule {
 
             for (let slice = 0; slice <= slices; slice++) {
                 let theta = 2 * Math.PI * slice / slices;
-                let x = radius * cosPhi * Math.cos(theta);
-                let z = radius * cosPhi * Math.sin(theta);
-                let y = halfH + radius * sinPhi;
+                let x = radiusX * cosPhi * Math.cos(theta);
+                let z = radiusZ * cosPhi * Math.sin(theta);
+                let y = halfH + radiusY * sinPhi;
                 this.vertex.push(x, y, z, colorValue[0], colorValue[1], colorValue[2]);
             }
         }
@@ -60,9 +61,9 @@ export class Capsule {
 
             for (let slice = 0; slice <= slices; slice++) {
                 let theta = 2 * Math.PI * slice / slices;
-                let x = radius * cosPhi * Math.cos(theta);
-                let z = radius * cosPhi * Math.sin(theta);
-                let y = -halfH - radius * sinPhi;
+                let x = radiusX * cosPhi * Math.cos(theta);
+                let z = radiusZ * cosPhi * Math.sin(theta);
+                let y = -halfH - radiusY * sinPhi;
                 this.vertex.push(x, y, z, colorValue[0], colorValue[1], colorValue[2]);
             }
         }
