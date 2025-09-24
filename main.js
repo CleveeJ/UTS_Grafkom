@@ -1,190 +1,140 @@
-import { MyObject } from "./Objects/MyObject.js";
-function main() {
-    //GET CANVAS
-    var CANVAS = document.getElementById("mycanvas");
+import { Badan } from "./Objects/badan.js";
+import { Rambut } from "./Objects/rambut.js";
+import { BolaRambut } from "./Objects/bolarambut.js";
 
+function main() {
+    const CANVAS = document.getElementById("mycanvas");
     CANVAS.width = window.innerWidth;
     CANVAS.height = window.innerHeight;
 
-    var drag = false;
-    var x_prev, y_prev;
-    var mouseDown = function (e) {
-        drag = true;
-        x_prev = e.pageX, y_prev = e.pageY;
-        e.preventDefault();
-        return false;
-    };
-    var mouseUp = function (e) {
-        drag = false;
-    };
-    var mouseMove = function (e) {
-        if (!drag) return false;
-        dX = (e.pageX - x_prev) * 2 * Math.PI / CANVAS.width;
-        dY = (e.pageY - y_prev) * 2 * Math.PI / CANVAS.height;
-        THETA += dX;
-        PHI += dY;
-        x_prev = e.pageX, y_prev = e.pageY;
-        e.preventDefault();
-    };
-
-
-    CANVAS.addEventListener("mousedown", mouseDown, false);
-    CANVAS.addEventListener("mouseup", mouseUp, false);
-    CANVAS.addEventListener("mouseout", mouseUp, false);
-    CANVAS.addEventListener("mousemove", mouseMove, false);
-
-    var keyDown = function (e) {
-        if (e.key === 'w') {
-            dY -= SPEED;
-        }
-        else if (e.key === 'a') {
-            dX -= SPEED;
-        }
-        else if (e.key === 's') {
-            dY += SPEED;
-        }
-        else if (e.key === 'd') {
-            dX += SPEED;
-        }
-    }
-    window.addEventListener("keydown", keyDown, false);
-
-
-    //INIT WEBGL
-    /** @type {WebGLRenderingContext} */
-    var GL;
-    try {
-        GL = CANVAS.getContext("webgl", { antialias: true });
-    } catch (e) {
-        alert("WebGL context cannot be initialized");
-        return false;
+    let GL = CANVAS.getContext("webgl", { antialias: true });
+    if (!GL) {
+        alert("WebGL tidak tersedia di browser ini");
+        return;
     }
 
-    //INIT SHADERS: berupa teks
-    var shader_vertex_source = `
+    /*================ SHADERS ================*/
+    const shader_vertex_source = `
         attribute vec3 position;
+        attribute vec3 color;
         uniform mat4 Pmatrix, Vmatrix, Mmatrix;
-        attribute vec3 color;  
-        varying vec3 vColor; 
-       
+        varying vec3 vColor;
         void main(void) {
             gl_Position = Pmatrix * Vmatrix * Mmatrix * vec4(position, 1.);
             vColor = color;
         }`;
 
-    var shader_fragment_source = `
+    const shader_fragment_source = `
         precision mediump float;
         varying vec3 vColor;
-       
         void main(void) {
             gl_FragColor = vec4(vColor, 1.);
         }`;
 
-
-    //SHADER COMPILER: menjadikan object
-    var compile_shader = function (source, type, typeString) {
-        var shader = GL.createShader(type);
+    function compile_shader(source, type) {
+        const shader = GL.createShader(type);
         GL.shaderSource(shader, source);
         GL.compileShader(shader);
         if (!GL.getShaderParameter(shader, GL.COMPILE_STATUS)) {
-            alert("ERROR IN " + typeString + " SHADER: " + GL.getShaderInfoLog(shader));
-            return false;
+            console.error(GL.getShaderInfoLog(shader));
+            return null;
         }
         return shader;
-    };
-    var shader_vertex = compile_shader(shader_vertex_source, GL.VERTEX_SHADER, "VERTEX");
-    var shader_fragment = compile_shader(shader_fragment_source, GL.FRAGMENT_SHADER, "FRAGMENT");
+    }
 
-    //PROGRAM SHADER: mengaktifkan shader
-    var SHADER_PROGRAM = GL.createProgram();
+    const shader_vertex = compile_shader(shader_vertex_source, GL.VERTEX_SHADER);
+    const shader_fragment = compile_shader(shader_fragment_source, GL.FRAGMENT_SHADER);
+
+    const SHADER_PROGRAM = GL.createProgram();
     GL.attachShader(SHADER_PROGRAM, shader_vertex);
     GL.attachShader(SHADER_PROGRAM, shader_fragment);
-
     GL.linkProgram(SHADER_PROGRAM);
-
-    var _position = GL.getAttribLocation(SHADER_PROGRAM, "position");
-    GL.enableVertexAttribArray(_position);
-
-    var _color = GL.getAttribLocation(SHADER_PROGRAM, "color");
-    GL.enableVertexAttribArray(_color);
-
-
-    var _Pmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Pmatrix");
-    var _Vmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Vmatrix");
-    var _Mmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Mmatrix");
-
     GL.useProgram(SHADER_PROGRAM);
 
-    /*========================= OBJECTS ========================= */
-    var Object1 = new MyObject(GL, SHADER_PROGRAM, _position, _color);
-    var Object2 = new MyObject(GL, SHADER_PROGRAM, _position, _color);
-    var Object3 = new MyObject(GL, SHADER_PROGRAM, _position, _color);
+    const _position = GL.getAttribLocation(SHADER_PROGRAM, "position");
+    const _color = GL.getAttribLocation(SHADER_PROGRAM, "color");
+    GL.enableVertexAttribArray(_position);
+    GL.enableVertexAttribArray(_color);
 
-    Object1.childs.push(Object2);
-    Object2.childs.push(Object3);
+    const _Pmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Pmatrix");
+    const _Vmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Vmatrix");
+    const _Mmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Mmatrix");
 
-    Object1.setup();
-    // Object2.setup();
+    /*================ OBJECT =================*/
+    const badan = new Badan(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
+    const rambut = new Rambut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
+    const bolarambut = new BolaRambut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
 
-    var PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
-    var MOVEMATRIX = LIBS.get_I4();
-    var VIEWMATRIX = LIBS.get_I4();
+    badan.childs.push(rambut);
+    badan.childs.push(bolarambut);
 
 
-    LIBS.translateZ(VIEWMATRIX, -10);
+    // LIBS.translateX(badan.MOVE_MATRIX, -2)
 
-    var THETA = 0, PHI = 0;
-    var FRICTION = 0.15;
-    var dX = 0, dY = 0;
-    var SPEED = 0.05;
 
+    /*================ CAMERA =================*/
+    const PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
+    const MOVEMATRIX = LIBS.get_I4();
+    const VIEWMATRIX = LIBS.get_I4();
+    LIBS.translateZ(VIEWMATRIX, -6);
+
+    let THETA = 0, PHI = 0, dX = 0, dY = 0;
+    let drag = false, x_prev, y_prev;
+    const FRICTION = 0.05;
+
+    CANVAS.addEventListener("mousedown", (e) => {
+        drag = true; x_prev = e.pageX; y_prev = e.pageY; e.preventDefault();
+    });
+    CANVAS.addEventListener("mouseup", () => drag = false);
+    CANVAS.addEventListener("mouseout", () => drag = false);
+    CANVAS.addEventListener("mousemove", (e) => {
+        if (!drag) return;
+        dX = (e.pageX - x_prev) * 2 * Math.PI / CANVAS.width;
+        dY = (e.pageY - y_prev) * 2 * Math.PI / CANVAS.height;
+        THETA += dX;
+        PHI += dY;
+        x_prev = e.pageX; y_prev = e.pageY;
+        e.preventDefault();
+    });
+
+    /*================ DRAW LOOP ================*/
     GL.enable(GL.DEPTH_TEST);
     GL.depthFunc(GL.LEQUAL);
-    GL.clearColor(0.0, 0.0, 0.0, 0.0);
+    GL.clearColor(0.9, 0.9, 0.9, 1.0);
     GL.clearDepth(1.0);
 
-    var time_prev = 0;
+    badan.setup();
 
-    var animate = function (time) {
+    function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 
-        var dt = time - time_prev;
-        time_prev = time;
+        LIBS.set_I4(VIEWMATRIX);
+        LIBS.rotateY(VIEWMATRIX, THETA);
+        LIBS.rotateX(VIEWMATRIX, PHI);
+        LIBS.translateZ(VIEWMATRIX, -6);
 
         if (!drag) {
-            dX *= (1 - FRICTION), dY *= (1 - FRICTION);
-            THETA += dX, PHI += dY;
+            dX *= (1 - FRICTION);
+            dY *= (1 - FRICTION);
+            THETA += dX;
+            PHI += dY;
         }
-
-
-        // Animasi juga bisa dibuat di masing-masing object
-        LIBS.set_I4(Object1.MOVE_MATRIX);
-        LIBS.translateX(Object1.MOVE_MATRIX, -2);
-        LIBS.translateY(Object1.MOVE_MATRIX, -PHI);
-        LIBS.translateX(Object1.MOVE_MATRIX, THETA);
-       
-        LIBS.set_I4(Object2.MOVE_MATRIX);
-        LIBS.translateX(Object2.MOVE_MATRIX, 2.5);
-        LIBS.rotateY(Object2.MOVE_MATRIX, time * 0.001);
-        LIBS.rotateX(Object2.MOVE_MATRIX, time * 0.001);
-
-        LIBS.set_I4(Object3.MOVE_MATRIX);
-        LIBS.translateX(Object3.MOVE_MATRIX, 2.5);
-        LIBS.rotateX(Object3.MOVE_MATRIX, time * 0.001);
-        LIBS.rotateY(Object3.MOVE_MATRIX, time * 0.001);
-
 
         GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
+        GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 
+        // Gambar badan & rambut
+        badan.render(LIBS.get_I4());
 
-        Object1.render(_Mmatrix, LIBS.get_I4());
-        // Object2.render(_Mmatrix);
+        // Panggil bola rambut dengan MOVEMATRIX supaya ikut badan
+        // bolarambut.draw(_position, _color, MOVEMATRIX);
 
-        GL.flush();
-        window.requestAnimationFrame(animate);
-    };
-    animate(0);
+        requestAnimationFrame(animate);
+    }
+
+    animate();
 }
+
 window.addEventListener('load', main);
