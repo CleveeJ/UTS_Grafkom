@@ -15,6 +15,7 @@ export class Rambut {
 
     POSITION_MATRIX = LIBS.get_I4(); // Mpos
     MOVE_MATRIX     = LIBS.get_I4(); // Mmove
+    MODEL_MATRIX = LIBS.get_I4();
 
     childs = [];
 
@@ -27,16 +28,16 @@ export class Rambut {
 
         // konfigurasi helai rambut
         this.helaiConfig = [
-            // belakang kanan
+            // belakang kiri
             { panjang: 3.3, lebar: 0.8, tinggi: 1.1, alpha: -1, beta: 0.2, curveFactor: 10, posX: -0.1, posZ: 0.2, rotasiY: -0.8, rotasiZ: 0 }, 
 
-            // belakang kiri
+            // belakang kanan
             { panjang: 3, lebar: 0.8,  tinggi: 1.1, alpha: 1, beta: 0.1, curveFactor: 0, posX: 0, posZ: 0.1, rotasiY: 4, rotasiZ: 0 }, 
 
-             // kanan depan
+             // kiri depan
             { panjang: 2.5, lebar: 0.8, tinggi: 1.1, alpha: 1.1, beta: 0.1, curveFactor: -1, posX: 0.15, posZ:  0.2, rotasiY:  0.6, rotasiZ: -0.15 }, 
 
-            // kiri depan
+            // kanan depan
             { panjang: 2.5, lebar: 0.8,  tinggi: 1.1, alpha: 1.1, beta: 0.1, curveFactor: -1, posX: -0.1, posZ:  0.2, rotasiY: 2.3, rotasiZ: 0 }, 
         ];
 
@@ -128,7 +129,7 @@ export class Rambut {
         this.childs.forEach(child => child.setup());
     }
 
-    render(PARENT_MATRIX) {
+    render(_MMatrix, PARENT_MATRIX) {
         this.MODEL_MATRIX = LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX);
         this.MODEL_MATRIX = LIBS.multiply(this.MODEL_MATRIX, PARENT_MATRIX);
 
@@ -142,6 +143,6 @@ export class Rambut {
         this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, this.OBJECT_FACES);
         this.GL.drawElements(this.GL.TRIANGLES, this.faces.length, this.GL.UNSIGNED_SHORT, 0);
 
-        this.childs.forEach(child => child.render(this.MODEL_MATRIX));
+        this.childs.forEach(child => child.render(_MMatrix, this.MODEL_MATRIX));
     }
 }

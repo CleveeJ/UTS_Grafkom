@@ -15,6 +15,7 @@ export class Badan {
 
     POSITION_MATRIX = LIBS.get_I4();
     MOVE_MATRIX     = LIBS.get_I4();
+    MODEL_MATRIX = LIBS.get_I4();
 
     childs = [];
 
@@ -75,7 +76,7 @@ export class Badan {
         this.childs.forEach(child => child.setup());
     }
 
-    render(PARENT_MATRIX) {
+    render(_MMatrix, PARENT_MATRIX) {
         this.MODEL_MATRIX = LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX);
         this.MODEL_MATRIX = LIBS.multiply(this.MODEL_MATRIX, PARENT_MATRIX);
 
@@ -89,6 +90,6 @@ export class Badan {
         this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, this.OBJECT_FACES);
         this.GL.drawElements(this.GL.TRIANGLES, this.faces.length, this.GL.UNSIGNED_SHORT, 0);
 
-        this.childs.forEach(child => child.render(this.MODEL_MATRIX));
+        this.childs.forEach(child => child.render(_MMatrix, this.MODEL_MATRIX));
     }
 }

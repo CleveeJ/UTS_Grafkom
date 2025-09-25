@@ -1,6 +1,7 @@
 import { Badan } from "./Objects/badan.js";
 import { Rambut } from "./Objects/rambut.js";
 import { BolaRambut } from "./Objects/bolarambut.js";
+import { Capsule } from "./Objects/Capsule.js";
 
 function main() {
     const CANVAS = document.getElementById("mycanvas");
@@ -64,9 +65,27 @@ function main() {
     const badan = new Badan(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
     const rambut = new Rambut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
     const bolarambut = new BolaRambut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
+    const legKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+        0.1, 0.1, 0.1, 0.5, 20, 10, [0.2, 0.3, 0.7]);
+    const legKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+        0.1, 0.1, 0.1, 0.5, 20, 10, [0.2, 0.3, 0.7]);
+    const footKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+         0.15, 0.15, 0.15, 1, 20, 10, [0.2, 0.3, 0.7]);
+    const footKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+         0.15, 0.15, 0.15, 1, 20, 10, [0.2, 0.3, 0.7]);
+    const handKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+         0.15, 0.15, 0.15, 1, 20, 10, [0.2, 0.3, 0.7]);
+    const handKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+         0.15, 0.15, 0.15, 1, 20, 10, [0.2, 0.3, 0.7]);
 
     badan.childs.push(rambut);
     badan.childs.push(bolarambut);
+    badan.childs.push(legKiri);
+    badan.childs.push(legKanan);
+    legKiri.childs.push(footKiri);
+    legKanan.childs.push(footKanan);
+    badan.childs.push(handKanan);
+    badan.childs.push(handKiri);
 
 
     // LIBS.translateX(badan.MOVE_MATRIX, -2)
@@ -105,6 +124,37 @@ function main() {
 
     badan.setup();
 
+    LIBS.translateY(legKiri.POSITION_MATRIX, -1.2);
+    LIBS.translateX(legKiri.POSITION_MATRIX, -0.4);
+
+    LIBS.translateY(legKanan.POSITION_MATRIX, -1.2);
+    LIBS.translateX(legKanan.POSITION_MATRIX, 0.4);
+
+    LIBS.rotateX(footKanan.POSITION_MATRIX, -1.5);
+    LIBS.rotateY(footKanan.POSITION_MATRIX, 0.8);
+    LIBS.translateX(footKanan.POSITION_MATRIX, 0.3);
+    LIBS.translateY(footKanan.POSITION_MATRIX, -0.35);
+    LIBS.translateZ(footKanan.POSITION_MATRIX, 0.3);
+
+    LIBS.rotateX(footKiri.POSITION_MATRIX, -1.5);
+    LIBS.rotateY(footKiri.POSITION_MATRIX, -0.8);
+    LIBS.translateX(footKiri.POSITION_MATRIX, -0.3);
+    LIBS.translateY(footKiri.POSITION_MATRIX, -0.35);
+    LIBS.translateZ(footKiri.POSITION_MATRIX, 0.3);
+
+    LIBS.rotateX(handKanan.POSITION_MATRIX, -1.5);
+    LIBS.rotateY(handKanan.POSITION_MATRIX, -1);
+    LIBS.translateX(handKanan.POSITION_MATRIX, -1.4);
+    LIBS.translateY(handKanan.POSITION_MATRIX, -0.3);
+    LIBS.translateZ(handKanan.POSITION_MATRIX, 0.3);
+
+    LIBS.rotateX(handKiri.POSITION_MATRIX, -1.5);
+    LIBS.rotateY(handKiri.POSITION_MATRIX, 1);
+    LIBS.translateX(handKiri.POSITION_MATRIX, 1.4);
+    LIBS.translateY(handKiri.POSITION_MATRIX, -0.3);
+    LIBS.translateZ(handKiri.POSITION_MATRIX, 0.3);
+
+
     function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
@@ -126,7 +176,7 @@ function main() {
         GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 
         // Gambar badan & rambut
-        badan.render(LIBS.get_I4());
+        badan.render(_Mmatrix, LIBS.get_I4());
 
         // Panggil bola rambut dengan MOVEMATRIX supaya ikut badan
         // bolarambut.draw(_position, _color, MOVEMATRIX);

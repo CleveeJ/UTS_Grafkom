@@ -15,6 +15,7 @@ export class BolaRambut {
 
     POSITION_MATRIX = LIBS.get_I4();
     MOVE_MATRIX     = LIBS.get_I4();
+    MODEL_MATRIX = LIBS.get_I4();
 
     childs = [];
 
@@ -87,7 +88,7 @@ export class BolaRambut {
         this.childs.forEach(child => child.setup());
     }
 
-    render(PARENT_MATRIX) {
+    render(_MMatrix, PARENT_MATRIX) {
         const gl = this.GL;
         gl.useProgram(this.SHADER_PROGRAM);
 
@@ -140,6 +141,6 @@ export class BolaRambut {
             gl.drawElements(gl.TRIANGLES, this.faces.length, gl.UNSIGNED_SHORT, 0);
         }
 
-        this.childs.forEach(child => child.render(PARENT_MATRIX));
+        this.childs.forEach(child => child.render(_MMatrix, PARENT_MATRIX));
     }
 }
