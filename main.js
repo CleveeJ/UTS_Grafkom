@@ -1,4 +1,5 @@
-import { MyObject } from "./Objects/MyObject.js";
+import { Ellipsoid } from "./Objects/Ellipsoid.js";
+import { Capsule } from "./Objects/Capsule.js";
 function main() {
     //GET CANVAS
     var CANVAS = document.getElementById("mycanvas");
@@ -116,18 +117,37 @@ function main() {
     GL.useProgram(SHADER_PROGRAM);
 
     /*========================= OBJECTS ========================= */
-    var Object1 = new MyObject(GL, SHADER_PROGRAM, _position, _color);
-    var Object2 = new MyObject(GL, SHADER_PROGRAM, _position, _color);
-    var Object3 = new MyObject(GL, SHADER_PROGRAM, _position, _color);
+    var Head = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 2, 2, 2, 20, 20, [0.7686, 0.8588, 0.6118]);
+    var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, 1.5, 0.5, 1.5, 2, 20, 10, [0.3, 0.1, 0.6118]);
+    var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.4, 0.4, 3, 20, 10, [0.8, 0.2, 0.6118]);
+    var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.4, 0.4, 3, 20, 10, [0.5, 0.6, 0.6118]);
 
-    Object1.childs.push(Object2);
-    Object2.childs.push(Object3);
+    Head.childs.push(Body);
+    Body.childs.push(Right_Hand);
+    Body.childs.push(Left_Hand);
 
-    Object1.setup();
-    // Object2.setup();
+    LIBS.translateY(Body.POSITION_MATRIX, -2)
+
+    LIBS.rotateX(Right_Hand.POSITION_MATRIX, Math.PI / 2);
+    LIBS.rotateY(Right_Hand.POSITION_MATRIX, -Math.PI / 3);
+    LIBS.translateX(Right_Hand.POSITION_MATRIX, -1);
+    LIBS.translateZ(Right_Hand.POSITION_MATRIX, 0.7);
+    LIBS.translateY(Right_Hand.POSITION_MATRIX, 0.2);
+
+    LIBS.rotateX(Left_Hand.POSITION_MATRIX, Math.PI / 2);
+    LIBS.rotateY(Left_Hand.POSITION_MATRIX, Math.PI / 3);
+    LIBS.translateX(Left_Hand.POSITION_MATRIX, 1);
+    LIBS.translateZ(Left_Hand.POSITION_MATRIX, 0.7);
+    LIBS.translateY(Left_Hand.POSITION_MATRIX, 0.2);
+
+    LIBS.set_I4(Head.MOVE_MATRIX);
+    LIBS.translateY(Head.POSITION_MATRIX, 1)
+
+    Head.setup();
+    
+    // ------------------------- END -----------------------
 
     var PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
-    var MOVEMATRIX = LIBS.get_I4();
     var VIEWMATRIX = LIBS.get_I4();
 
 
@@ -157,30 +177,17 @@ function main() {
             THETA += dX, PHI += dY;
         }
 
-
-        // Animasi juga bisa dibuat di masing-masing object
-        LIBS.set_I4(Object1.MOVE_MATRIX);
-        LIBS.translateX(Object1.MOVE_MATRIX, -2);
-        LIBS.translateY(Object1.MOVE_MATRIX, -PHI);
-        LIBS.translateX(Object1.MOVE_MATRIX, THETA);
-       
-        LIBS.set_I4(Object2.MOVE_MATRIX);
-        LIBS.translateX(Object2.MOVE_MATRIX, 2.5);
-        LIBS.rotateY(Object2.MOVE_MATRIX, time * 0.001);
-        LIBS.rotateX(Object2.MOVE_MATRIX, time * 0.001);
-
-        LIBS.set_I4(Object3.MOVE_MATRIX);
-        LIBS.translateX(Object3.MOVE_MATRIX, 2.5);
-        LIBS.rotateX(Object3.MOVE_MATRIX, time * 0.001);
-        LIBS.rotateY(Object3.MOVE_MATRIX, time * 0.001);
-
-
         GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
+
+        VIEWMATRIX = LIBS.get_I4();
+        LIBS.translateZ(VIEWMATRIX, -30);
+
+        LIBS.rotateY(VIEWMATRIX, THETA);
+        LIBS.rotateX(VIEWMATRIX, PHI);
+
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
-
-
-        Object1.render(_Mmatrix, LIBS.get_I4());
-        // Object2.render(_Mmatrix);
+        
+        Head.render(_Mmatrix, LIBS.get_I4());
 
         GL.flush();
         window.requestAnimationFrame(animate);
