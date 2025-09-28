@@ -151,7 +151,12 @@ function main() {
     }
 
     // BADAN
-    const body = new Ellipsoid(gl, shaderProgram, 0.9, 1.0, 0.8, 40, 40, [0.4, 0.6, 0.9, 1.0]);
+    const body = new Ellipsoid(gl, shaderProgram, 0.9, 0.9, 0.8, 40, 40, [0.4, 0.6, 0.9, 1.0]);
+
+    // TANGAN (elliptic paraboloid)
+    const leftHand  = new EllipticParaboloid(gl, shaderProgram, 0.45, 0.15, 0.25, 32, [0.4, 0.6, 0.9, 1.0]);
+    const rightHand = new EllipticParaboloid(gl, shaderProgram, 0.45, 0.15, 0.25, 32, [0.4, 0.6, 0.9, 1.0]);
+
 
     // =================== KONTROL MOUSE ===================
     let rotationX = 0, rotationY = 0;
@@ -194,6 +199,25 @@ function main() {
         gl.uniformMatrix4fv(shaderProgram.uModelViewMatrix, false, bodyMatrix);
         body.draw(bodyMatrix);
 
+        // === TANGAN KIRI ===
+        let leftMatrix = bodyMatrix.slice();
+        mat4.translate(leftMatrix, leftMatrix, [-1.1, -0.1, 0.0]);    // geser ke kiri badan
+        mat4.rotateY(leftMatrix, leftMatrix, LIBS.degToRad(0));     // putar paraboloid ke arah samping
+        mat4.rotateZ(leftMatrix, leftMatrix, LIBS.degToRad(-15));    // condong sedikit ke bawah
+        mat4.rotateX(leftMatrix, leftMatrix, LIBS.degToRad(-60)); 
+        gl.uniformMatrix4fv(shaderProgram.uModelViewMatrix, false, leftMatrix);
+        leftHand.draw();
+
+        // === TANGAN KANAN ===
+        let rightMatrix = bodyMatrix.slice();
+        mat4.translate(rightMatrix, rightMatrix, [1.0, 0.0, 0.0]); // geser ke kanan badan
+        mat4.rotateY(leftMatrix, leftMatrix, LIBS.degToRad(0));     // putar paraboloid ke arah samping
+        mat4.rotateZ(leftMatrix, leftMatrix, LIBS.degToRad(-15));    // condong sedikit ke bawah
+        mat4.rotateX(leftMatrix, leftMatrix, LIBS.degToRad(-90)); 
+        gl.uniformMatrix4fv(shaderProgram.uModelViewMatrix, false, rightMatrix);
+        rightHand.draw();
+
+
         // === MATA ===
         gl.disable(gl.DEPTH_TEST); // supaya mata nggak ketutup badan
         drawEye(gl, shaderProgram, bodyMatrix, -0.3, 0.3); // kiri
@@ -235,14 +259,14 @@ function main() {
         // === KELOPAK ===
         
         const PETAL_RADIUS = 0.8;
-        const PETAL_TILT   = LIBS.degToRad(-5);
+        const PETAL_TILT   = LIBS.degToRad(5);
 
         for (let i = 0; i < PETAL_COUNT; i++) {
-            const ang = (i * 2 * Math.PI) / PETAL_COUNT;
+            const ang = (i * 2 * Math.PI) / PETAL_COUNT + Math.PI / 2 + Math.PI +  LIBS.degToRad(-25);
             let M = modelViewMatrix.slice();
 
             mat4.rotateZ(M, M, ang);
-            mat4.translate(M, M, [PETAL_RADIUS, 0.0, -0.12]); // Z dinaikkan dari -0.05 → -0.03
+            mat4.translate(M, M, [PETAL_RADIUS, 0.0, -0.25]); 
             mat4.rotateY(M, M, PETAL_TILT);
 
             gl.uniformMatrix4fv(shaderProgram.uModelViewMatrix, false, M);
