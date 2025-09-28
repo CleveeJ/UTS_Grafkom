@@ -23,8 +23,8 @@ function drawSmile(gl, shaderProgram, baseMatrix, x, y) {
 
     // Titik kontrol cubic Bezier untuk senyuman
     let p0 = [-0.25, 0.0, 0];
-    let p1 = [-0.20, -0.25, 0];
-    let p2 = [ 0.25, -0.3, 0];
+    let p1 = [-0.25, -0.25, 0];
+    let p2 = [ 0.25, -0.25, 0];
     let p3 = [ 0.25, 0.0, 0];
 
     function bezier(p0, p1, p2, p3, t) {
@@ -151,7 +151,7 @@ function main() {
     }
 
     // BADAN
-    const body = new Ellipsoid(gl, shaderProgram, 0.8, 0.9, 0.8, 40, 40, [0.4, 0.6, 0.9, 1.0]);
+    const body = new Ellipsoid(gl, shaderProgram, 0.9, 1.0, 0.8, 40, 40, [0.4, 0.6, 0.9, 1.0]);
 
     // =================== KONTROL MOUSE ===================
     let rotationX = 0, rotationY = 0;
@@ -178,25 +178,29 @@ function main() {
 
         let modelViewMatrix = mat4.create();
         mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.9, -5.0]);
-        mat4.rotateX(modelViewMatrix, modelViewMatrix, LIBS.degToRad(-40));
-        mat4.rotateY(modelViewMatrix, modelViewMatrix, LIBS.degToRad(-20));
+
+        // kasih rotasi default supaya torus berdiri
+        mat4.rotateX(modelViewMatrix, modelViewMatrix, LIBS.degToRad(-90));
+
+        // baru kemudian rotasi interaktif
         mat4.rotateY(modelViewMatrix, modelViewMatrix, rotationY);
         mat4.rotateX(modelViewMatrix, modelViewMatrix, rotationX);
 
         // === BADAN ===
         let bodyMatrix = modelViewMatrix.slice();
-        mat4.translate(bodyMatrix, bodyMatrix, [0.0, -0.6, -0.9]);
+        mat4.translate(bodyMatrix, bodyMatrix, [0.0, 0, -1.1]);
+        mat4.rotateX(bodyMatrix, bodyMatrix, LIBS.degToRad(90));
         gl.uniformMatrix4fv(shaderProgram.uProjectionMatrix, false, projectionMatrix);
         gl.uniformMatrix4fv(shaderProgram.uModelViewMatrix, false, bodyMatrix);
         body.draw(bodyMatrix);
 
         // === MATA ===
         gl.disable(gl.DEPTH_TEST); // supaya mata nggak ketutup badan
-        drawEye(gl, shaderProgram, bodyMatrix, -0.3, -0.3); // kiri
-        drawEye(gl, shaderProgram, bodyMatrix,  0.4, -0.3); // kanan
+        drawEye(gl, shaderProgram, bodyMatrix, -0.3, 0.3); // kiri
+        drawEye(gl, shaderProgram, bodyMatrix,  0.3, 0.3); // kanan
 
         // === SENYUM ===
-        drawSmile(gl, shaderProgram, bodyMatrix, 0.1, -0.6);
+        drawSmile(gl, shaderProgram, bodyMatrix, 0.0, 0);
         gl.enable(gl.DEPTH_TEST);
 
         // === PUSAT BUNGA ===
@@ -230,15 +234,15 @@ function main() {
 
         // === KELOPAK ===
         
-        const PETAL_RADIUS = 0.7;
-        const PETAL_TILT   = LIBS.degToRad(-13);
+        const PETAL_RADIUS = 0.8;
+        const PETAL_TILT   = LIBS.degToRad(-5);
 
         for (let i = 0; i < PETAL_COUNT; i++) {
             const ang = (i * 2 * Math.PI) / PETAL_COUNT;
             let M = modelViewMatrix.slice();
 
             mat4.rotateZ(M, M, ang);
-            mat4.translate(M, M, [PETAL_RADIUS, 0.0, -0.03]); // Z dinaikkan dari -0.05 → -0.03
+            mat4.translate(M, M, [PETAL_RADIUS, 0.0, -0.12]); // Z dinaikkan dari -0.05 → -0.03
             mat4.rotateY(M, M, PETAL_TILT);
 
             gl.uniformMatrix4fv(shaderProgram.uModelViewMatrix, false, M);
