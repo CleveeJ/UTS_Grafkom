@@ -1,25 +1,58 @@
 function drawEye(gl, shaderProgram, baseMatrix, x, y) {
-    let M = baseMatrix.slice();
-    // geser X dan Y relatif ke badan
-    mat4.translate(M, M, [x, y, 0.5]);  // Z offset lebih besar biar nongol di depan
-
-    // Lingkaran hitam (outline)
+    // Mata hitam (paling belakang)
+    let Mblack = baseMatrix.slice();
+    mat4.translate(Mblack, Mblack, [x, y, 0.715]);
+    mat4.rotateY(Mblack, Mblack, LIBS.degToRad(-20));
+    mat4.rotateX(Mblack, Mblack, LIBS.degToRad(-20));
     let eyeBlack = new BezierCircle(gl, shaderProgram, 0.1, 40, [0.0, 0.0, 0.0, 1.0]);
-    eyeBlack.draw(M);
+    eyeBlack.draw(Mblack);
 
-    // Lingkaran merah penuh
+    // Mata merah (di depan hitam)
+    let Mred = baseMatrix.slice();
+    mat4.translate(Mred, Mred, [x, y, 0.725]); 
+    mat4.rotateY(Mred, Mred, LIBS.degToRad(-20));
+    mat4.rotateX(Mred, Mred, LIBS.degToRad(-20));
     let eyeRed = new BezierCircle(gl, shaderProgram, 0.08, 40, [0.8, 0.0, 0.0, 1.0]);
-    eyeRed.draw(M);
+    eyeRed.draw(Mred);
 
-    // Lingkaran putih (refleksi)
-    let Mw = M.slice();
+    // Mata putih (refleksi paling depan)
+    let Mwhite = baseMatrix.slice();
+    mat4.translate(Mwhite, Mwhite, [x, y, 0.735]); 
+    mat4.rotateY(Mwhite, Mwhite, LIBS.degToRad(-20));
+    mat4.rotateX(Mwhite, Mwhite, LIBS.degToRad(-20));
     let eyeWhite = new BezierCircle(gl, shaderProgram, 0.04, 40, [1.0, 1.0, 1.0, 1.0]);
-    eyeWhite.draw(Mw);
+    eyeWhite.draw(Mwhite);
+}
+
+function drawEyeKanan(gl, shaderProgram, baseMatrix, x, y) {
+    // Mata hitam (paling belakang)
+    let Mblack = baseMatrix.slice();
+    mat4.translate(Mblack, Mblack, [x, y, 0.715]);
+    mat4.rotateY(Mblack, Mblack, LIBS.degToRad(20));
+    mat4.rotateX(Mblack, Mblack, LIBS.degToRad(-20));
+    let eyeBlack = new BezierCircle(gl, shaderProgram, 0.1, 40, [0.0, 0.0, 0.0, 1.0]);
+    eyeBlack.draw(Mblack);
+
+    // Mata merah (di depan hitam)
+    let Mred = baseMatrix.slice();
+    mat4.translate(Mred, Mred, [x, y, 0.725]); 
+    mat4.rotateY(Mred, Mred, LIBS.degToRad(20));
+    mat4.rotateX(Mred, Mred, LIBS.degToRad(-20));
+    let eyeRed = new BezierCircle(gl, shaderProgram, 0.08, 40, [0.8, 0.0, 0.0, 1.0]);
+    eyeRed.draw(Mred);
+
+    // Mata putih (refleksi paling depan)
+    let Mwhite = baseMatrix.slice();
+    mat4.translate(Mwhite, Mwhite, [x, y, 0.735]); 
+    mat4.rotateY(Mwhite, Mwhite, LIBS.degToRad(20));
+    mat4.rotateX(Mwhite, Mwhite, LIBS.degToRad(-20));
+    let eyeWhite = new BezierCircle(gl, shaderProgram, 0.04, 40, [1.0, 1.0, 1.0, 1.0]);
+    eyeWhite.draw(Mwhite);
 }
 
 function drawSmile(gl, shaderProgram, baseMatrix, x, y) {
     let M = baseMatrix.slice();
-    mat4.translate(M, M, [x, y, 0.5]); // majuin ke depan biar nggak ketutup badan
+    mat4.translate(M, M, [x, y, 0.785]); // majuin ke depan biar nggak ketutup badan
 
     // Titik kontrol cubic Bezier untuk senyuman
     let p0 = [-0.25, 0.0, 0];
@@ -219,13 +252,11 @@ function main() {
 
 
         // === MATA ===
-        gl.disable(gl.DEPTH_TEST); // supaya mata nggak ketutup badan
         drawEye(gl, shaderProgram, bodyMatrix, -0.3, 0.3); // kiri
-        drawEye(gl, shaderProgram, bodyMatrix,  0.3, 0.3); // kanan
+        drawEyeKanan(gl, shaderProgram, bodyMatrix,  0.3, 0.3); // kanan
 
         // === SENYUM ===
         drawSmile(gl, shaderProgram, bodyMatrix, 0.0, 0);
-        gl.enable(gl.DEPTH_TEST);
 
         // === PUSAT BUNGA ===
         gl.uniformMatrix4fv(shaderProgram.uModelViewMatrix,  false, modelViewMatrix);
