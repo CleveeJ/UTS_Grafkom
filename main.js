@@ -133,12 +133,12 @@ function main() {
     ];
 
     var Skirt2 = [
-        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 0],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.9569, 0.9059, 0.5333]), 0],
         [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 1/3],
-        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.9569, 0.9059, 0.5333]), 2/3],
-        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 1],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 2/3],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.9569, 0.9059, 0.5333]), 1],
         [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 4/3],
-        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.9569, 0.9059, 0.5333]), 5/3],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 5/3],
     ];
 
     Head.childs.push(Body);
