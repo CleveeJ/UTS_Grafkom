@@ -1,5 +1,6 @@
 import { Ellipsoid } from "./Objects/Ellipsoid.js";
 import { Capsule } from "./Objects/Capsule.js";
+import { Leaf } from "./Objects/Leaf.js";
 function main() {
     //GET CANVAS
     var CANVAS = document.getElementById("mycanvas");
@@ -117,14 +118,42 @@ function main() {
     GL.useProgram(SHADER_PROGRAM);
 
     /*========================= OBJECTS ========================= */
-    var Head = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 2, 2, 2, 20, 20, [0.7686, 0.8588, 0.6118]);
-    var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, 1.5, 0.5, 1.5, 2, 20, 10, [0.3, 0.1, 0.6118]);
-    var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.4, 0.4, 3, 20, 10, [0.8, 0.2, 0.6118]);
-    var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.4, 0.4, 3, 20, 10, [0.5, 0.6, 0.6118]);
+    var Head = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 1.7, 1.7, 1.7, 20, 20, [0.7686, 0.8588, 0.6118]);
+    var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, 1.2, 0.5, 1.2, 2, 20, 10, [0.3, 0.1, 0.6118]);
+    var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.3, 0.3, 0.3, 2, 20, 10, [0.8, 0.2, 0.6118]);
+    var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.3, 0.3, 0.3, 2, 20, 10, [0.5, 0.6, 0.6118]);
+
+    var Skirt1 = [
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), -1/6],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 1/6],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.9569, 0.9059, 0.5333]), 3/6],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 5/6],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 7/6],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.9569, 0.9059, 0.5333]), 9/6],
+    ];
+
+    var Skirt2 = [
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 0],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 1/3],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.9569, 0.9059, 0.5333]), 2/3],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 1],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 4/3],
+        [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.9569, 0.9059, 0.5333]), 5/3],
+    ];
 
     Head.childs.push(Body);
     Body.childs.push(Right_Hand);
     Body.childs.push(Left_Hand);
+
+    for (let index = 0; index < Skirt1.length; index++) {
+        const element = Skirt1[index];
+        Body.childs.push(element[0]);
+    }
+
+    for (let index = 0; index < Skirt1.length; index++) {
+        const element = Skirt2[index];
+        Body.childs.push(element[0]);
+    }
 
     LIBS.translateY(Body.POSITION_MATRIX, -2)
 
@@ -132,16 +161,40 @@ function main() {
     LIBS.rotateY(Right_Hand.POSITION_MATRIX, -Math.PI / 3);
     LIBS.translateX(Right_Hand.POSITION_MATRIX, -1);
     LIBS.translateZ(Right_Hand.POSITION_MATRIX, 0.7);
-    LIBS.translateY(Right_Hand.POSITION_MATRIX, 0.2);
+    LIBS.translateY(Right_Hand.POSITION_MATRIX, 0.5);
 
     LIBS.rotateX(Left_Hand.POSITION_MATRIX, Math.PI / 2);
     LIBS.rotateY(Left_Hand.POSITION_MATRIX, Math.PI / 3);
     LIBS.translateX(Left_Hand.POSITION_MATRIX, 1);
     LIBS.translateZ(Left_Hand.POSITION_MATRIX, 0.7);
-    LIBS.translateY(Left_Hand.POSITION_MATRIX, 0.2);
+    LIBS.translateY(Left_Hand.POSITION_MATRIX, 0.5);
 
-    LIBS.set_I4(Head.MOVE_MATRIX);
-    LIBS.translateY(Head.POSITION_MATRIX, 1)
+    LIBS.translateY(Head.POSITION_MATRIX, 1);
+
+    for (let index = 0; index < Skirt1.length; index++) {
+        const element = Skirt1[index];
+
+        LIBS.translateZ(element[0].POSITION_MATRIX, -2);
+        LIBS.rotateX(element[0].POSITION_MATRIX, Math.PI/6)
+        LIBS.scaleX(element[0].POSITION_MATRIX, 1.5);
+        var temp = LIBS.get_I4();
+        LIBS.rotateY(temp, Math.PI * element[1]);
+        element[0].POSITION_MATRIX = LIBS.multiply(element[0].POSITION_MATRIX, temp);
+
+        LIBS.translateY(element[0].POSITION_MATRIX, -0.5)
+    }
+
+    for (let index = 0; index < Skirt2.length; index++) {
+        const element = Skirt2[index];
+
+        LIBS.translateZ(element[0].POSITION_MATRIX, -1.3);
+        LIBS.rotateX(element[0].POSITION_MATRIX, Math.PI/6)
+        var temp = LIBS.get_I4();
+        LIBS.rotateY(temp, Math.PI * element[1]);
+        element[0].POSITION_MATRIX = LIBS.multiply(element[0].POSITION_MATRIX, temp);
+
+        LIBS.translateY(element[0].POSITION_MATRIX, -0.5)
+    }
 
     Head.setup();
     

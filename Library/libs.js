@@ -106,6 +106,12 @@ var LIBS = {
     scaleZ: function (m, t) {
         m[10] *= t;
     },
+
+    scaleAll: function (m,t) {
+        m[0] *= t;
+        m[5] *= t;
+        m[10] *= t;
+    },
     
     multiply: function (m1, m2) {
         var rm = this.get_I4();
