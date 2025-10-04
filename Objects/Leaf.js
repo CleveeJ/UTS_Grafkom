@@ -73,7 +73,7 @@ export class Leaf {
                 let theta = 2 * Math.PI * i / coneSlices;
                 let bx = radiusXY * Math.cos(theta);
                 let by = y;
-                let bz = radiusZ * Math.sin(theta) + Math.pow(by/3, 2); // Z mengecil + bengkok
+                let bz = radiusZ * Math.sin(theta) + Math.pow(by/3 + 0.2, 2); // Z mengecil + bengkok
 
                 this.vertex.push(
                     bx, by, bz,

@@ -141,7 +141,7 @@ function main() {
         [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.5, 20, 36, [0.0, 0.7, 0.1]), 5/3],
     ];
 
-    Head.childs.push(Body);
+    Body.childs.push(Head);
     Body.childs.push(Right_Hand);
     Body.childs.push(Left_Hand);
 
@@ -155,7 +155,7 @@ function main() {
         Body.childs.push(element[0]);
     }
 
-    LIBS.translateY(Body.POSITION_MATRIX, -2)
+    LIBS.translateY(Head.POSITION_MATRIX, 1);
 
     LIBS.rotateX(Right_Hand.POSITION_MATRIX, Math.PI / 2);
     LIBS.rotateY(Right_Hand.POSITION_MATRIX, -Math.PI / 3);
@@ -174,9 +174,9 @@ function main() {
     for (let index = 0; index < Skirt1.length; index++) {
         const element = Skirt1[index];
 
-        LIBS.translateZ(element[0].POSITION_MATRIX, -2);
+        LIBS.translateZ(element[0].POSITION_MATRIX, -1.7);
         LIBS.rotateX(element[0].POSITION_MATRIX, Math.PI/6)
-        LIBS.scaleX(element[0].POSITION_MATRIX, 1.5);
+        LIBS.scaleX(element[0].POSITION_MATRIX, 1.3);
         var temp = LIBS.get_I4();
         LIBS.rotateY(temp, Math.PI * element[1]);
         element[0].POSITION_MATRIX = LIBS.multiply(element[0].POSITION_MATRIX, temp);
@@ -196,7 +196,7 @@ function main() {
         LIBS.translateY(element[0].POSITION_MATRIX, -0.5)
     }
 
-    Head.setup();
+    Body.setup();
     
     // ------------------------- END -----------------------
 
@@ -240,7 +240,7 @@ function main() {
 
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
         
-        Head.render(_Mmatrix, LIBS.get_I4());
+        Body.render(_Mmatrix, LIBS.get_I4());
 
         GL.flush();
         window.requestAnimationFrame(animate);
