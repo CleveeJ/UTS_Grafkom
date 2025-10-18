@@ -169,6 +169,11 @@ function main() {
         [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
         [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
     ]
+
+    // Mata
+    var LeftEye = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 0.2, 0.2, 0.2, 20, 20, [0, 0, 0]);
+    var RightEye = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 0.2, 0.2, 0.2, 20, 20, [0, 0, 0]);
+
     // ============= END OF DEFINISI ===================
 
     // ============= BAGIAN HIERARKI NYA ===============
@@ -177,6 +182,8 @@ function main() {
     Body.childs.push(Right_Hand);
     Body.childs.push(Left_Hand);
     Head.childs.push(Flower_Torus1);
+    Head.childs.push(LeftEye);
+    Head.childs.push(RightEye);
     Flower_Torus1.childs.push(Flower_Elipsoid1);
     Head.childs.push(Flower_Torus2);
     Flower_Torus2.childs.push(Flower_Elipsoid2);
@@ -244,6 +251,16 @@ function main() {
 
     //Kepala
     LIBS.translateY(Head.POSITION_MATRIX, 2);
+
+    //Mata Kiri
+    LIBS.translateZ(LeftEye.POSITION_MATRIX, 1.6);
+    LIBS.translateY(LeftEye.POSITION_MATRIX, 0.2);
+    LIBS.translateX(LeftEye.POSITION_MATRIX, 0.5);
+
+    //Mata Kanan
+    LIBS.translateZ(RightEye.POSITION_MATRIX, 1.6);
+    LIBS.translateY(RightEye.POSITION_MATRIX, 0.2);
+    LIBS.translateX(RightEye.POSITION_MATRIX, -0.5);
 
     //Tangan Kanan
     LIBS.rotateX(Right_Hand.POSITION_MATRIX, Math.PI / 2);
