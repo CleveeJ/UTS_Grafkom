@@ -1,117 +1,61 @@
 import { Bellossom } from "./bellosom.js";
 function main() {
-    //GET CANVAS
-    var CANVAS = document.getElementById("mycanvas");
-
+    const CANVAS = document.getElementById("mycanvas");
     CANVAS.width = window.innerWidth;
     CANVAS.height = window.innerHeight;
 
-    var drag = false;
-    var x_prev, y_prev;
-    var mouseDown = function (e) {
-        drag = true;
-        x_prev = e.pageX, y_prev = e.pageY;
-        e.preventDefault();
-        return false;
-    };
-    var mouseUp = function (e) {
-        drag = false;
-    };
-    var mouseMove = function (e) {
-        if (!drag) return false;
-        dX = (e.pageX - x_prev) * 2 * Math.PI / CANVAS.width;
-        dY = (e.pageY - y_prev) * 2 * Math.PI / CANVAS.height;
-        THETA += dX;
-        PHI += dY;
-        x_prev = e.pageX, y_prev = e.pageY;
-        e.preventDefault();
-    };
-
-
-    CANVAS.addEventListener("mousedown", mouseDown, false);
-    CANVAS.addEventListener("mouseup", mouseUp, false);
-    CANVAS.addEventListener("mouseout", mouseUp, false);
-    CANVAS.addEventListener("mousemove", mouseMove, false);
-
-    var keyDown = function (e) {
-        if (e.key === 'w') {
-            dY -= SPEED;
-        }
-        else if (e.key === 'a') {
-            dX -= SPEED;
-        }
-        else if (e.key === 's') {
-            dY += SPEED;
-        }
-        else if (e.key === 'd') {
-            dX += SPEED;
-        }
-    }
-    window.addEventListener("keydown", keyDown, false);
-
-
-    //INIT WEBGL
-    /** @type {WebGLRenderingContext} */
-    var GL;
-    try {
-        GL = CANVAS.getContext("webgl", { antialias: true });
-    } catch (e) {
-        alert("WebGL context cannot be initialized");
-        return false;
+    let GL = CANVAS.getContext("webgl", { antialias: true });
+    if (!GL) {
+        alert("WebGL tidak tersedia di browser ini");
+        return;
     }
 
-    //INIT SHADERS: berupa teks
-    var shader_vertex_source = `
+    /*================ SHADERS ================*/
+    const shader_vertex_source = `
         attribute vec3 position;
+        attribute vec3 color;
         uniform mat4 Pmatrix, Vmatrix, Mmatrix;
-        attribute vec3 color;  
-        varying vec3 vColor; 
-       
+        varying vec3 vColor;
         void main(void) {
             gl_Position = Pmatrix * Vmatrix * Mmatrix * vec4(position, 1.);
             vColor = color;
         }`;
 
-    var shader_fragment_source = `
+    const shader_fragment_source = `
         precision mediump float;
         varying vec3 vColor;
-       
         void main(void) {
             gl_FragColor = vec4(vColor, 1.);
         }`;
 
-
-    //SHADER COMPILER: menjadikan object
-    var compile_shader = function (source, type, typeString) {
-        var shader = GL.createShader(type);
+    function compile_shader(source, type) {
+        const shader = GL.createShader(type);
         GL.shaderSource(shader, source);
         GL.compileShader(shader);
         if (!GL.getShaderParameter(shader, GL.COMPILE_STATUS)) {
-            alert("ERROR IN " + typeString + " SHADER: " + GL.getShaderInfoLog(shader));
-            return false;
+            console.error(GL.getShaderInfoLog(shader));
+            return null;
         }
         return shader;
-    };
-    var shader_vertex = compile_shader(shader_vertex_source, GL.VERTEX_SHADER, "VERTEX");
-    var shader_fragment = compile_shader(shader_fragment_source, GL.FRAGMENT_SHADER, "FRAGMENT");
+    }
 
-    //PROGRAM SHADER: mengaktifkan shader
-    var SHADER_PROGRAM = GL.createProgram();
+    const shader_vertex = compile_shader(shader_vertex_source, GL.VERTEX_SHADER);
+    const shader_fragment = compile_shader(shader_fragment_source, GL.FRAGMENT_SHADER);
+
+    const SHADER_PROGRAM = GL.createProgram();
     GL.attachShader(SHADER_PROGRAM, shader_vertex);
     GL.attachShader(SHADER_PROGRAM, shader_fragment);
-
     GL.linkProgram(SHADER_PROGRAM);
+    GL.useProgram(SHADER_PROGRAM);
 
-    var _position = GL.getAttribLocation(SHADER_PROGRAM, "position");
+    const _position = GL.getAttribLocation(SHADER_PROGRAM, "position");
+    const _color = GL.getAttribLocation(SHADER_PROGRAM, "color");
     GL.enableVertexAttribArray(_position);
-
-    var _color = GL.getAttribLocation(SHADER_PROGRAM, "color");
     GL.enableVertexAttribArray(_color);
 
-
-    var _Pmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Pmatrix");
-    var _Vmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Vmatrix");
-    var _Mmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Mmatrix");
+    const _Pmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Pmatrix");
+    const _Vmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Vmatrix");
+    const _Mmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Mmatrix");
 
     GL.useProgram(SHADER_PROGRAM);
 
@@ -136,17 +80,88 @@ function main() {
 
     GL.enable(GL.DEPTH_TEST);
     GL.depthFunc(GL.LEQUAL);
-    GL.clearColor(0.0, 0.0, 0.0, 0.0);
+    GL.clearColor(0.9, 0.9, 0.9, 1.0);
     GL.clearDepth(1.0);
 
-    var time_prev = 0;
+    badan.setup();
 
-    var animate = function (time) {
+    LIBS.translateY(legKiri.POSITION_MATRIX, -1.2);
+    LIBS.translateX(legKiri.POSITION_MATRIX, -0.4);
+
+    LIBS.translateY(legKanan.POSITION_MATRIX, -1.2);
+    LIBS.translateX(legKanan.POSITION_MATRIX, 0.4);
+
+    LIBS.rotateX(footKanan.POSITION_MATRIX, -1.5);
+    LIBS.rotateY(footKanan.POSITION_MATRIX, 0.8);
+    LIBS.translateX(footKanan.POSITION_MATRIX, 0.3);
+    LIBS.translateY(footKanan.POSITION_MATRIX, -0.35);
+    LIBS.translateZ(footKanan.POSITION_MATRIX, 0.3);
+
+    LIBS.rotateX(footKiri.POSITION_MATRIX, -1.5);
+    LIBS.rotateY(footKiri.POSITION_MATRIX, -0.8);
+    LIBS.translateX(footKiri.POSITION_MATRIX, -0.3);
+    LIBS.translateY(footKiri.POSITION_MATRIX, -0.35);
+    LIBS.translateZ(footKiri.POSITION_MATRIX, 0.3);
+
+    LIBS.rotateX(handKanan.POSITION_MATRIX, -1.5);
+    LIBS.rotateY(handKanan.POSITION_MATRIX, -1);
+    LIBS.translateX(handKanan.POSITION_MATRIX, -1.4);
+    LIBS.translateY(handKanan.POSITION_MATRIX, -0.3);
+    LIBS.translateZ(handKanan.POSITION_MATRIX, 0.3);
+
+    LIBS.rotateX(handKiri.POSITION_MATRIX, -1.5);
+    LIBS.rotateY(handKiri.POSITION_MATRIX, 1);
+    LIBS.translateX(handKiri.POSITION_MATRIX, 1.4);
+    LIBS.translateY(handKiri.POSITION_MATRIX, -0.3);
+    LIBS.translateZ(handKiri.POSITION_MATRIX, 0.3);
+
+    LIBS.translateY(mulutLuar.POSITION_MATRIX, -0.27); 
+    LIBS.translateZ(mulutLuar.POSITION_MATRIX, 1.31);  
+    
+    LIBS.translateY(mulutDalam.POSITION_MATRIX, -0.36); 
+    LIBS.translateZ(mulutDalam.POSITION_MATRIX, 1.30);   
+    
+    LIBS.rotateX(iler1.POSITION_MATRIX, 1.6);
+    LIBS.translateY(iler1.POSITION_MATRIX, -0.08);
+    LIBS.translateX(iler1.POSITION_MATRIX, 0.38);
+    LIBS.rotateX(iler1.POSITION_MATRIX, 1.57); 
+    
+    LIBS.rotateX(iler2.POSITION_MATRIX, 1.6);
+    LIBS.translateY(iler2.POSITION_MATRIX, -0.05);
+    LIBS.translateX(iler2.POSITION_MATRIX, 0.45);
+    LIBS.rotateX(iler2.POSITION_MATRIX, 1.57); 
+
+    LIBS.translateX(mataKiri.POSITION_MATRIX, 0.7);
+    LIBS.translateY(mataKiri.POSITION_MATRIX, 0.2);
+    LIBS.translateZ(mataKiri.POSITION_MATRIX, 1.1);
+    LIBS.rotateY(mataKiri.POSITION_MATRIX, 0.5);
+
+    LIBS.translateX(mataKanan.POSITION_MATRIX, -0.7);
+    LIBS.translateY(mataKanan.POSITION_MATRIX, 0.2);
+    LIBS.translateZ(mataKanan.POSITION_MATRIX, 1.1);
+    LIBS.rotateY(mataKanan.POSITION_MATRIX, -0.58);
+
+    LIBS.translateY(putihbolarambutDepan.POSITION_MATRIX, 1.68);
+    LIBS.translateZ(putihbolarambutDepan.POSITION_MATRIX, 1);
+
+    LIBS.translateY(putihbolarambutBelakang.POSITION_MATRIX, 1.68);
+    LIBS.translateZ(putihbolarambutBelakang.POSITION_MATRIX, -1);
+
+    LIBS.translateX(putihbolarambutKanan.POSITION_MATRIX, 1);
+    LIBS.translateY(putihbolarambutKanan.POSITION_MATRIX, 1.68);
+
+    LIBS.translateX(putihbolarambutKiri.POSITION_MATRIX, -1);
+    LIBS.translateY(putihbolarambutKiri.POSITION_MATRIX, 1.68);
+    
+
+    function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 
-        var dt = time - time_prev;
-        time_prev = time;
+        LIBS.set_I4(VIEWMATRIX);
+        LIBS.rotateY(VIEWMATRIX, THETA);
+        LIBS.rotateX(VIEWMATRIX, PHI);
+        LIBS.translateZ(VIEWMATRIX, -6);
 
         if (!drag) {
             dX *= (1 - FRICTION), dY *= (1 - FRICTION);
@@ -165,9 +180,7 @@ function main() {
         
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
 
-        GL.flush();
-        window.requestAnimationFrame(animate);
-    };
-    animate(0);
+    animate();
 }
+
 window.addEventListener('load', main);
