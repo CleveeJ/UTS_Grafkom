@@ -64,7 +64,7 @@ export class Flower {
     const PETAL_RADIUS = 0.8;              // Lebih besar agar menutupi torus
     const PETAL_TILT = LIBS.degToRad(2);   // Hampir datar
     const PETAL_Y_OFFSET = -1.02;          // Menyesuaikan tinggi supaya nempel torus
-    const PETAL_Z_FLAT = -0.18;            // Kelopak rata (tidak menukik)
+    const PETAL_Z_FLAT = -0.175;            // Kelopak rata (tidak menukik)
 
     for (let i = 0; i < PETAL_COUNT; i++) {
       const ang = (i * 2 * Math.PI) / PETAL_COUNT + Math.PI / 2 + Math.PI + LIBS.degToRad(-25);
@@ -78,11 +78,11 @@ export class Flower {
 
       // Layer kelopak (bawah → atas)
       let Mbottom = M.slice();
-      for (let z = 1; z <= 5; z++) {
-        let nilai_z = -z * 0.01;
-        mat4.translate(Mbottom, Mbottom, [0, 0, nilai_z]); // naikkan kelopak bawah sedikit per layer
-        this.petalBottom.draw(Mbottom); 
-      }
+    //   for (let z = 1; z <= 5; z++) {
+    //     let nilai_z = -z * 0.01;
+    //     mat4.translate(Mbottom, Mbottom, [0, 0, nilai_z]); // naikkan kelopak bawah sedikit per layer
+    //     this.petalBottom.draw(Mbottom); 
+    //   }
     //   mat4.translate(Mbottom, Mbottom, [0, 0, -0.05]); // turunkan kelopak bawah sedikit
     //   this.petalBottom.draw(Mbottom);    
       this.petalTop.draw(M);
