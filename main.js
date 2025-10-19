@@ -2,6 +2,8 @@ import { Badan } from "./Objects/badan.js";
 import { Rambut } from "./Objects/rambut.js";
 import { BolaRambut } from "./Objects/bolarambut.js";
 import { Capsule } from "./Objects/Capsule.js";
+import { bSplineMulut } from "./Objects/bSplineMulut.js";
+import { Ellipsoid } from "./Objects/Ellipsoid.js";
 
 function main() {
     const CANVAS = document.getElementById("mycanvas");
@@ -66,17 +68,152 @@ function main() {
     const rambut = new Rambut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
     const bolarambut = new BolaRambut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
     const legKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
-        0.1, 0.1, 0.1, 0.5, 20, 10, [0.2, 0.3, 0.7]);
+        0.1, 0.1, 0.1, 0.5, 20, 10, [0.41, 0.57, 0.69]);
     const legKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
-        0.1, 0.1, 0.1, 0.5, 20, 10, [0.2, 0.3, 0.7]);
+        0.1, 0.1, 0.1, 0.5, 20, 10, [0.41, 0.57, 0.69]);
     const footKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
-         0.15, 0.15, 0.15, 1, 20, 10, [0.2, 0.3, 0.7]);
+         0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
     const footKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
-         0.15, 0.15, 0.15, 1, 20, 10, [0.2, 0.3, 0.7]);
+         0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
     const handKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
-         0.15, 0.15, 0.15, 1, 20, 10, [0.2, 0.3, 0.7]);
+         0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
     const handKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
-         0.15, 0.15, 0.15, 1, 20, 10, [0.2, 0.3, 0.7]);
+         0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
+
+
+    const iler1 = new Capsule(
+        GL, SHADER_PROGRAM, _position, _color,
+        0.06, 0.06, 0.06, 0.2, 20, 10, [1, 1, 1] 
+    );
+
+    const iler2 = new Capsule(
+        GL, SHADER_PROGRAM, _position, _color,
+        0.06, 0.06, 0.06, 0.1, 20, 10, [1, 1, 1] 
+    );
+
+    const mulutControlPoints = [
+        0, 0,
+        -0.17, 0.01,
+        -0.38, -0.03,
+        -0.57, -0.07,
+        -0.65, 0.03,
+        -0.51, 0.11,
+        -0.40 , 0.14,
+        -0.18 , 0.17,
+        0.18 , 0.17,
+        0.40 , 0.14,
+        0.51, 0.11,
+        0.65, 0.03,
+        0.57, -0.07,
+        0.38, -0.03,
+        0.17, 0.01,
+    ];
+
+    const mulutLuar = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, 
+        mulutControlPoints,
+        0.05, // radius
+        20,   // segments
+        100,  // curveDetail
+        [0.53, 0.51, 0.77] // color (merah)
+        
+    );
+
+    const mulutControlPointsDalam = [
+    -0.0225, 0.1658,
+    -0.3097, 0.1571,
+    -0.4576, 0.1224,
+    -0.5577, 0.0876,
+    -0.5925, 0.0528,
+    -0.5100, 0.1100,
+    -0.4000, 0.1400,
+    -0.1800, 0.1700,
+    0.1800, 0.1700,
+    0.4000, 0.1400,
+    0.4953, 0.1137,
+    0.6084, 0.0615,
+    0.5127, 0.1137,
+    0.3517, 0.1484,
+    0.2647, 0.1658
+    ];
+
+    const mulutDalam = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, 
+        mulutControlPointsDalam,
+        0.05, // radius
+        20,   // segments
+        100,  // curveDetail
+        [0.929, 0.678, 0.706] // color (merah)
+    );
+
+    const mataKiriControlPoints = [
+        -0.1313, -0.1557,
+        -0.2488, -0.1296,
+        -0.3837, -0.0862,
+        -0.4794, -0.0167,
+        -0.5751, 0.2788,
+        -0.4794, -0.0167,
+        -0.3880, -0.0775,
+        -0.2531, -0.1383,
+        -0.1313, -0.1557,
+        0.0906, -0.1209
+    ];
+
+    const mataKananControlPoints = [
+        0.1313, -0.1557,
+        0.2488, -0.1296,
+        0.3837, -0.0862,
+        0.4794, -0.0167,
+        0.5751, 0.2788,
+        0.4794, -0.0167,
+        0.3880, -0.0775,
+        0.2531, -0.1383,
+        0.1313, -0.1557,
+       -0.0906, -0.1209
+    ];
+
+
+    const mataKiri = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix,
+        mataKiriControlPoints,
+        0.03,
+        20,
+        100,
+        [0.1, 0.1, 0.1]
+    );
+
+    const mataKanan = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _Mmatrix,
+        mataKananControlPoints,
+        0.03,
+        20,
+        100,
+        [0.1, 0.1, 0.1], 0.
+    );
+
+    const putihbolarambutDepan = new Ellipsoid(
+        GL, SHADER_PROGRAM, _position, _color,
+        0.3, 0.3, 0.3,
+        20, 20,
+        [1.0, 1.0, 1.0]
+    );
+
+    const putihbolarambutBelakang = new Ellipsoid(
+        GL, SHADER_PROGRAM, _position, _color,
+        0.3, 0.3, 0.3,
+        20, 20,
+        [1.0, 1.0, 1.0]
+    );
+
+    const putihbolarambutKanan = new Ellipsoid(
+        GL, SHADER_PROGRAM, _position, _color,
+        0.3, 0.3, 0.3,
+        20, 20,
+        [1.0, 1.0, 1.0]
+    );
+
+    const putihbolarambutKiri = new Ellipsoid(
+        GL, SHADER_PROGRAM, _position, _color,
+        0.3, 0.3, 0.3,
+        20, 20,
+        [1.0, 1.0, 1.0]
+    );
 
     badan.childs.push(rambut);
     badan.childs.push(bolarambut);
@@ -86,13 +223,19 @@ function main() {
     legKanan.childs.push(footKanan);
     badan.childs.push(handKanan);
     badan.childs.push(handKiri);
-
-
-    // LIBS.translateX(badan.MOVE_MATRIX, -2)
-
+    badan.childs.push(mulutLuar);
+    badan.childs.push(mulutDalam);
+    badan.childs.push(mataKiri);
+    badan.childs.push(mataKanan);
+    mulutLuar.childs.push(iler1);
+    mulutLuar.childs.push(iler2);
+    bolarambut.childs.push(putihbolarambutDepan);
+    bolarambut.childs.push(putihbolarambutBelakang);
+    bolarambut.childs.push(putihbolarambutKanan);
+    bolarambut.childs.push(putihbolarambutKiri);
 
     /*================ CAMERA =================*/
-    const PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
+    const PROJMATRIX = LIBS.get_projection(70, CANVAS.width / CANVAS.height, 1, 100);
     const MOVEMATRIX = LIBS.get_I4();
     const VIEWMATRIX = LIBS.get_I4();
     LIBS.translateZ(VIEWMATRIX, -6);
@@ -154,6 +297,44 @@ function main() {
     LIBS.translateY(handKiri.POSITION_MATRIX, -0.3);
     LIBS.translateZ(handKiri.POSITION_MATRIX, 0.3);
 
+    LIBS.translateY(mulutLuar.POSITION_MATRIX, -0.27); 
+    LIBS.translateZ(mulutLuar.POSITION_MATRIX, 1.31);  
+    
+    LIBS.translateY(mulutDalam.POSITION_MATRIX, -0.36); 
+    LIBS.translateZ(mulutDalam.POSITION_MATRIX, 1.30);   
+    
+    LIBS.rotateX(iler1.POSITION_MATRIX, 1.6);
+    LIBS.translateY(iler1.POSITION_MATRIX, -0.08);
+    LIBS.translateX(iler1.POSITION_MATRIX, 0.38);
+    LIBS.rotateX(iler1.POSITION_MATRIX, 1.57); 
+    
+    LIBS.rotateX(iler2.POSITION_MATRIX, 1.6);
+    LIBS.translateY(iler2.POSITION_MATRIX, -0.05);
+    LIBS.translateX(iler2.POSITION_MATRIX, 0.45);
+    LIBS.rotateX(iler2.POSITION_MATRIX, 1.57); 
+
+    LIBS.translateX(mataKiri.POSITION_MATRIX, 0.7);
+    LIBS.translateY(mataKiri.POSITION_MATRIX, 0.2);
+    LIBS.translateZ(mataKiri.POSITION_MATRIX, 1.1);
+    LIBS.rotateY(mataKiri.POSITION_MATRIX, 0.5);
+
+    LIBS.translateX(mataKanan.POSITION_MATRIX, -0.7);
+    LIBS.translateY(mataKanan.POSITION_MATRIX, 0.2);
+    LIBS.translateZ(mataKanan.POSITION_MATRIX, 1.1);
+    LIBS.rotateY(mataKanan.POSITION_MATRIX, -0.58);
+
+    LIBS.translateY(putihbolarambutDepan.POSITION_MATRIX, 1.68);
+    LIBS.translateZ(putihbolarambutDepan.POSITION_MATRIX, 1);
+
+    LIBS.translateY(putihbolarambutBelakang.POSITION_MATRIX, 1.68);
+    LIBS.translateZ(putihbolarambutBelakang.POSITION_MATRIX, -1);
+
+    LIBS.translateX(putihbolarambutKanan.POSITION_MATRIX, 1);
+    LIBS.translateY(putihbolarambutKanan.POSITION_MATRIX, 1.68);
+
+    LIBS.translateX(putihbolarambutKiri.POSITION_MATRIX, -1);
+    LIBS.translateY(putihbolarambutKiri.POSITION_MATRIX, 1.68);
+    
 
     function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
@@ -175,11 +356,7 @@ function main() {
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
         GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 
-        // Gambar badan & rambut
         badan.render(_Mmatrix, LIBS.get_I4());
-
-        // Panggil bola rambut dengan MOVEMATRIX supaya ikut badan
-        // bolarambut.draw(_position, _color, MOVEMATRIX);
 
         requestAnimationFrame(animate);
     }

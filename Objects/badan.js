@@ -45,7 +45,7 @@ export class Badan {
                 let y = b * r * Math.sin(u);
                 let z = c * r * Math.sin(v) * Math.cos(u);
 
-                vertices.push(x, y, z, 1.0, 0.5, 0.0); // warna oranye
+                vertices.push(x, y, z, 0.41, 0.57, 0.69); // warna oranye
             }
         }
 

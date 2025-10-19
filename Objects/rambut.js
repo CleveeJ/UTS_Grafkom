@@ -86,9 +86,9 @@ export class Rambut {
                     z += posZ;
 
                     // warna
-                    let R = 0.15 + 0.1 * (1 - r);
-                    let G = 0.35 + 0.4 * (1 - r);
-                    let B = 0.1;
+                    let R = 1.0 * (1 - 0.2 * r);
+                    let G = 0.56 * (1 - 0.2 * r);
+                    let B = 0.34 * (1 - 0.2 * r);
 
                     localVertices.push(x, y, z, R, G, B);
                 }
