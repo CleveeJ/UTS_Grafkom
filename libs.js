@@ -1,16 +1,25 @@
-const LIBS = {
-  get_gl_context: function(canvas_id) {
+// ========== WebGL Utilities ==========
+export const LIBS = {
+  get_gl_context: function (canvas_id) {
     const canvas = document.getElementById(canvas_id);
-    return canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    if (!gl) {
+      alert("WebGL not supported");
+      throw new Error("WebGL not supported");
+    }
+    return gl;
   },
 
-  get_shader: function(gl, id, str) {
+  get_shader: function (gl, id, str) {
     let shader;
-    if (id == "shader-fs") {
+    if (id === "shader-fs") {
       shader = gl.createShader(gl.FRAGMENT_SHADER);
-    } else if (id == "shader-vs") {
+    } else if (id === "shader-vs") {
       shader = gl.createShader(gl.VERTEX_SHADER);
+    } else {
+      throw new Error("Invalid shader type: " + id);
     }
+
     gl.shaderSource(shader, str);
     gl.compileShader(shader);
 
@@ -21,22 +30,23 @@ const LIBS = {
     return shader;
   },
 
-  degToRad: function(angle) {
-    return angle * Math.PI / 180;
-  }
+  degToRad: function (angle) {
+    return (angle * Math.PI) / 180;
+  },
 };
 
-// ========== Matrix utils ==========
-
-const mat4 = {
-  create: function() {
-    return [1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1];
+// ========== Matrix Utilities ==========
+export const mat4 = {
+  create: function () {
+    return [
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
+    ];
   },
 
-  perspective: function(out, fovy, aspect, near, far) {
+  perspective: function (out, fovy, aspect, near, far) {
     const f = 1.0 / Math.tan(fovy / 2);
     const nf = 1 / (near - far);
 
@@ -59,16 +69,13 @@ const mat4 = {
     out[13] = 0;
     out[14] = (2 * far * near) * nf;
     out[15] = 0;
-
     return out;
   },
 
-  translate: function(out, a, v) {
+  translate: function (out, a, v) {
     const x = v[0], y = v[1], z = v[2];
     if (a !== out) {
-      for (let i = 0; i < 12; i++) {
-        out[i] = a[i];
-      }
+      for (let i = 0; i < 12; i++) out[i] = a[i];
     }
     out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
     out[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
@@ -77,7 +84,7 @@ const mat4 = {
     return out;
   },
 
-  rotateY: function(out, a, rad) {
+  rotateY: function (out, a, rad) {
     const s = Math.sin(rad);
     const c = Math.cos(rad);
 
@@ -104,7 +111,7 @@ const mat4 = {
     return out;
   },
 
-    rotateX: function(out, a, rad) {
+  rotateX: function (out, a, rad) {
     const s = Math.sin(rad);
     const c = Math.cos(rad);
 
@@ -122,7 +129,7 @@ const mat4 = {
     return out;
   },
 
-  rotateZ: function(out, a, rad) {
+  rotateZ: function (out, a, rad) {
     const s = Math.sin(rad), c = Math.cos(rad);
     const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
     const a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
@@ -137,12 +144,10 @@ const mat4 = {
     out[6] = a12 * c - a02 * s;
     out[7] = a13 * c - a03 * s;
 
-    out[8]  = a[8];  out[9]  = a[9];
+    out[8] = a[8]; out[9] = a[9];
     out[10] = a[10]; out[11] = a[11];
     out[12] = a[12]; out[13] = a[13];
     out[14] = a[14]; out[15] = a[15];
     return out;
-    }
+  },
 };
-
-
