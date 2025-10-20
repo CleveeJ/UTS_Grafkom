@@ -1,4 +1,4 @@
-export class Ellipsoid {
+export class Leaf {
     GL = null;
     SHADER_PROGRAM = null;
     _position = null;
@@ -16,7 +16,7 @@ export class Ellipsoid {
     MOVE_MATRIX = LIBS.get_I4();
     childs = [];
 
-    constructor(GL, SHADER_PROGRAM, _position, _color, _normal = null, rx = 1, ry = 1, rz = 1, stacks = 20, slices = 20, colorValue = [1, 1, 1]) {
+    constructor(GL, SHADER_PROGRAM, _position, _color, _normal = null, rxy = 1, rz = 0.2, stacks = 15, slices = 30, colorValue = [0, 1, 0]) {
         this.GL = GL;
         this.SHADER_PROGRAM = SHADER_PROGRAM;
         this._position = _position;
@@ -30,18 +30,14 @@ export class Ellipsoid {
             let phi = Math.PI * stack / stacks;
             let cosPhi = Math.cos(phi);
             let sinPhi = Math.sin(phi);
-
             for (let slice = 0; slice <= slices; slice++) {
                 let theta = 2 * Math.PI * slice / slices;
-                let cosTheta = Math.cos(theta);
-                let sinTheta = Math.sin(theta);
-
-                let x = rx * sinPhi * cosTheta;
-                let y = ry * cosPhi;
-                let z = rz * sinPhi * sinTheta;
-
+                let cosT = Math.cos(theta);
+                let sinT = Math.sin(theta);
+                let x = rxy * sinPhi * cosT;
+                let y = rxy * sinPhi * sinT;
+                let z = rz * cosPhi + Math.pow((y/3 + 0.2), 2);
                 this.vertex.push(x, y, z, colorValue[0], colorValue[1], colorValue[2]);
-
                 let len = Math.sqrt(x*x + y*y + z*z);
                 this.normal.push(x/len, y/len, z/len);
             }
@@ -50,9 +46,40 @@ export class Ellipsoid {
         for (let stack = 0; stack < stacks; stack++) {
             for (let slice = 0; slice < slices; slice++) {
                 let first = (stack * (slices + 1)) + slice;
-                let second = first + slices + 1;
+                let second = first + (slices + 1);
                 this.faces.push(first, second, first + 1);
                 this.faces.push(second, second + 1, first + 1);
+            }
+        }
+
+        let baseIndex = this.vertex.length / 6;
+        let coneSlices = slices;
+        let coneStacks = 10;
+        let coneHeight = rxy * 3;
+        let bendFactor = 0.5;
+
+        for (let j = 0; j <= coneStacks; j++) {
+            let t = j / coneStacks;
+            let radiusXY = rxy * (1 - Math.pow(t, 2));
+            let radiusZ = rz * (1 - t);
+            let y = -t * coneHeight - 0.15;
+            for (let i = 0; i <= coneSlices; i++) {
+                let theta = 2 * Math.PI * i / coneSlices;
+                let bx = radiusXY * Math.cos(theta);
+                let by = y;
+                let bz = radiusZ * Math.sin(theta) + Math.pow(by/3 + 0.2, 2);
+                this.vertex.push(bx, by, bz, colorValue[0], colorValue[1], colorValue[2]);
+                let len = Math.sqrt(bx*bx + by*by + bz*bz);
+                this.normal.push(bx/len, by/len, bz/len);
+            }
+        }
+
+        for (let j = 0; j < coneStacks; j++) {
+            let ringStart = baseIndex + j * (coneSlices + 1);
+            let nextRingStart = ringStart + (coneSlices + 1);
+            for (let i = 0; i < coneSlices; i++) {
+                this.faces.push(ringStart + i, nextRingStart + i, ringStart + i + 1);
+                this.faces.push(ringStart + i + 1, nextRingStart + i, nextRingStart + i + 1);
             }
         }
     }

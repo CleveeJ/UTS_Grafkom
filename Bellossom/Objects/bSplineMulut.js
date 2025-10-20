@@ -161,7 +161,7 @@ function generateSosisGeometry3D(spinePoints3D, radius, segments, stacks = 10) {
 // 🔹 Class utama (mulut/sosis)
 // =================================================
 export class bSplineMulut {
-  GL = null; SHADER_PROGRAM = null; _position = null; _color = null; _normal = null;
+  GL = null; SHADER_PROGRAM = null; _position = null; _color = null;
   OBJECT_VERTEX = null; OBJECT_FACES = null;
   vertex = []; faces = [];
   MODEL_MATRIX = LIBS.get_I4();
@@ -169,7 +169,7 @@ export class bSplineMulut {
   MOVE_MATRIX = LIBS.get_I4();
   childs = [];
 
-  constructor(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, _normal,
+  constructor(GL, SHADER_PROGRAM, _position, _color, _Mmatrix,
               controlPoints, radius = 0.05, segments = 16,
               curveDetail = 200, colorValue = [1, 1, 1]) {
     this.GL = GL;
@@ -177,7 +177,6 @@ export class bSplineMulut {
     this._position = _position;
     this._color = _color;
     this._Mmatrix = _Mmatrix;
-    this._normal = _normal;
     this.controlPoints = controlPoints;
     this.radius = radius;
     this.segments = segments;
@@ -187,62 +186,20 @@ export class bSplineMulut {
   }
 
   _generateGeometry() {
-  const curve3D = generateClosedBSplineWithDepth(this.controlPoints, this.curveDetail, 3);
-  const geom = generateSosisGeometry3D(curve3D, this.radius, this.segments);
+    const curve3D = generateClosedBSplineWithDepth(this.controlPoints, this.curveDetail, 3);
+    const geom = generateSosisGeometry3D(curve3D, this.radius, this.segments);
 
-  const vertices = geom.vertices;
-  const indices = geom.indices;
-  const normals = new Array(vertices.length).fill(0);
-
-  // --- Hitung normal per-face dan akumulasikan ke setiap vertex ---
-  for (let i = 0; i < indices.length; i += 3) {
-    const ia = indices[i];
-    const ib = indices[i + 1];
-    const ic = indices[i + 2];
-
-    const ax = vertices[ia * 3 + 0], ay = vertices[ia * 3 + 1], az = vertices[ia * 3 + 2];
-    const bx = vertices[ib * 3 + 0], by = vertices[ib * 3 + 1], bz = vertices[ib * 3 + 2];
-    const cx = vertices[ic * 3 + 0], cy = vertices[ic * 3 + 1], cz = vertices[ic * 3 + 2];
-
-    // vektor tepi
-    const Ux = bx - ax, Uy = by - ay, Uz = bz - az;
-    const Vx = cx - ax, Vy = cy - ay, Vz = cz - az;
-
-    // 🔹 balik arah normal (V × U, bukan U × V)
-    const Nx = Vy * Uz - Vz * Uy;
-    const Ny = Vz * Ux - Vx * Uz;
-    const Nz = Vx * Uy - Vy * Ux;
-
-    // akumulasi ke tiga vertex
-    normals[ia * 3 + 0] += Nx; normals[ia * 3 + 1] += Ny; normals[ia * 3 + 2] += Nz;
-    normals[ib * 3 + 0] += Nx; normals[ib * 3 + 1] += Ny; normals[ib * 3 + 2] += Nz;
-    normals[ic * 3 + 0] += Nx; normals[ic * 3 + 1] += Ny; normals[ic * 3 + 2] += Nz;
+    this.vertex = [];
+    for (let i = 0; i < geom.vertices.length; i += 3) {
+      this.vertex.push(
+        geom.vertices[i],
+        geom.vertices[i + 1],
+        geom.vertices[i + 2],
+        ...this.colorValue
+      );
+    }
+    this.faces = geom.indices;
   }
-
-  // --- Normalisasi setiap normal vertex ---
-  for (let i = 0; i < normals.length; i += 3) {
-    const nx = normals[i];
-    const ny = normals[i + 1];
-    const nz = normals[i + 2];
-    const len = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1.0;
-    normals[i] = nx / len;
-    normals[i + 1] = ny / len;
-    normals[i + 2] = nz / len;
-  }
-
-  // --- Gabungkan posisi + normal + warna jadi 1 array (interleaved) ---
-  this.vertex = [];
-  for (let i = 0; i < vertices.length / 3; i++) {
-    this.vertex.push(
-      vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2], // posisi
-      normals[i * 3 + 0],  normals[i * 3 + 1],  normals[i * 3 + 2],  // normal
-      this.colorValue[0],  this.colorValue[1],  this.colorValue[2]   // warna
-    );
-  }
-
-  this.faces = indices;
-}
-
 
   setup() {
     const GL = this.GL;
@@ -259,21 +216,17 @@ export class bSplineMulut {
 
   render(_MMatrix, parentMatrix) {
     const GL = this.GL;
-    this.MODEL_MATRIX = LIBS.multiply(LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX), parentMatrix);
+    this.MODEL_MATRIX = LIBS.multiply(parentMatrix, LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX));
 
     GL.useProgram(this.SHADER_PROGRAM);
-    GL.uniformMatrix4fv(_MMatrix, false, this.MODEL_MATRIX);
+    GL.uniformMatrix4fv(this._Mmatrix, false, this.MODEL_MATRIX);
 
     GL.bindBuffer(GL.ARRAY_BUFFER, this.OBJECT_VERTEX);
     GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.OBJECT_FACES);
 
-    const stride = 9 * 4; // 9 floats = 36 bytes
-    GL.vertexAttribPointer(this._position, 3, GL.FLOAT, false, stride, 0);
-    GL.vertexAttribPointer(this._normal,   3, GL.FLOAT, false, stride, 4 * 3);
-    GL.vertexAttribPointer(this._color,    3, GL.FLOAT, false, stride, 4 * 6);
-
+    GL.vertexAttribPointer(this._position, 3, GL.FLOAT, false, 4 * 6, 0);
+    GL.vertexAttribPointer(this._color, 3, GL.FLOAT, false, 4 * 6, 4 * 3);
     GL.enableVertexAttribArray(this._position);
-    GL.enableVertexAttribArray(this._normal);
     GL.enableVertexAttribArray(this._color);
 
     GL.drawElements(GL.TRIANGLES, this.faces.length, GL.UNSIGNED_SHORT, 0);

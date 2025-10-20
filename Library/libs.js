@@ -129,6 +129,7 @@ var LIBS = {
     clone: function (m) {
         return m.slice();
     },
+
     scale: function (m, v) {
         const sx = v[0], sy = v[1], sz = v[2];
         m[0] *= sx; m[1] *= sx; m[2] *= sx;

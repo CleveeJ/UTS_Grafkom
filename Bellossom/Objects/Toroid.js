@@ -1,4 +1,4 @@
-export class Ellipsoid {
+export class Toroid {
     GL = null;
     SHADER_PROGRAM = null;
     _position = null;
@@ -16,7 +16,10 @@ export class Ellipsoid {
     MOVE_MATRIX = LIBS.get_I4();
     childs = [];
 
-    constructor(GL, SHADER_PROGRAM, _position, _color, _normal = null, rx = 1, ry = 1, rz = 1, stacks = 20, slices = 20, colorValue = [1, 1, 1]) {
+    constructor(GL, SHADER_PROGRAM, _position, _color, _normal = null,
+                radiusX = 1, radiusY = 1, radiusZ = 1,
+                height = 0.5, slices = 40, stacks = 20,
+                colorValue = [1, 1, 1]) {
         this.GL = GL;
         this.SHADER_PROGRAM = SHADER_PROGRAM;
         this._position = _position;
@@ -26,31 +29,37 @@ export class Ellipsoid {
         this.faces = [];
         this.normal = [];
 
-        for (let stack = 0; stack <= stacks; stack++) {
-            let phi = Math.PI * stack / stacks;
+        const r = height;
+
+        for (let i = 0; i <= stacks; i++) {
+            let phi = 2 * Math.PI * i / stacks;
             let cosPhi = Math.cos(phi);
             let sinPhi = Math.sin(phi);
 
-            for (let slice = 0; slice <= slices; slice++) {
-                let theta = 2 * Math.PI * slice / slices;
+            for (let j = 0; j <= slices; j++) {
+                let theta = 2 * Math.PI * j / slices;
                 let cosTheta = Math.cos(theta);
                 let sinTheta = Math.sin(theta);
 
-                let x = rx * sinPhi * cosTheta;
-                let y = ry * cosPhi;
-                let z = rz * sinPhi * sinTheta;
+                let x = (radiusX + r * cosPhi) * cosTheta;
+                let y = (radiusY + r * cosPhi) * sinTheta;
+                let z = radiusZ * sinPhi;
 
                 this.vertex.push(x, y, z, colorValue[0], colorValue[1], colorValue[2]);
 
-                let len = Math.sqrt(x*x + y*y + z*z);
-                this.normal.push(x/len, y/len, z/len);
+                let nx = cosPhi * cosTheta;
+                let ny = cosPhi * sinTheta;
+                let nz = sinPhi;
+                let len = Math.sqrt(nx*nx + ny*ny + nz*nz);
+                this.normal.push(nx/len, ny/len, nz/len);
             }
         }
 
-        for (let stack = 0; stack < stacks; stack++) {
-            for (let slice = 0; slice < slices; slice++) {
-                let first = (stack * (slices + 1)) + slice;
-                let second = first + slices + 1;
+        let ringVerts = slices + 1;
+        for (let i = 0; i < stacks; i++) {
+            for (let j = 0; j < slices; j++) {
+                let first = i * ringVerts + j;
+                let second = first + ringVerts;
                 this.faces.push(first, second, first + 1);
                 this.faces.push(second, second + 1, first + 1);
             }

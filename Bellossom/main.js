@@ -1,4 +1,4 @@
-import { Gloom } from "./gloom.js";
+import { Bellossom } from "./bellosom.js";
 
 function main() {
     const CANVAS = document.getElementById("mycanvas");
@@ -121,7 +121,7 @@ function main() {
     const _ambientColor = GL.getUniformLocation(SHADER_PROGRAM, "ambientColor");
 
     // ---------------- OBJECT ----------------
-    const BellossomObject = new Gloom(GL, SHADER_PROGRAM, _position, _color,_Mmatrix, _normal);
+    const BellossomObject = new Bellossom(GL, SHADER_PROGRAM, _position, _color, _normal);
     BellossomObject.setup();
 
     // ---------------- MATRIX ----------------
@@ -136,7 +136,7 @@ function main() {
     GL.clearDepth(1.0);
 
     // ---------------- LIGHT ----------------
-    GL.uniform3fv(_lightPos, [0, 10, 10]);
+    GL.uniform3fv(_lightPos, [10, 10, 0]);
     GL.uniform3fv(_lightColor, [1, 1, 1]);
     GL.uniform3fv(_ambientColor, [0.1, 0.1, 0.1]);
 

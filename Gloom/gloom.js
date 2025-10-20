@@ -9,32 +9,32 @@ export class Gloom {
     root = null;
     walk = 0;
 
-    constructor(GL, SHADER_PROGRAM, _position, _color, _MMatrix) {
+    constructor(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal) {
 
         /*================ OBJECT =================*/
-        const badan = new Badan(GL, SHADER_PROGRAM, _position, _color, _MMatrix);
-        const rambut = new Rambut(GL, SHADER_PROGRAM, _position, _color, _MMatrix);
-        const bolarambut = new BolaRambut(GL, SHADER_PROGRAM, _position, _color, _MMatrix);
+        const badan = new Badan(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal);
+        const rambut = new Rambut(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal);
+        const bolarambut = new BolaRambut(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal);
 
-        const legKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+        const legKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.1, 0.1, 0.1, 0.5, 20, 10, [0.41, 0.57, 0.69]);
-        const legKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+        const legKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.1, 0.1, 0.1, 0.5, 20, 10, [0.41, 0.57, 0.69]);
 
-        const footKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+        const footKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
-        const footKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
-            0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
-
-        const handKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color,
-            0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
-        const handKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+        const footKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
 
-        const iler1 = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+        const handKanan = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal,
+            0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
+        const handKiri = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal,
+            0.15, 0.15, 0.15, 1, 20, 10, [0.41, 0.57, 0.69]);
+
+        const iler1 = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.06, 0.06, 0.06, 0.2, 20, 10, [1, 1, 1]);
 
-        const iler2 = new Capsule(GL, SHADER_PROGRAM, _position, _color,
+        const iler2 = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.06, 0.06, 0.06, 0.1, 20, 10, [1, 1, 1]);
 
         const mulutControlPoints = [
@@ -44,7 +44,7 @@ export class Gloom {
             0.57, -0.07, 0.38, -0.03, 0.17, 0.01,
         ];
 
-        const mulutLuar = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _MMatrix,
+        const mulutLuar = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal,
             mulutControlPoints, 0.05, 20, 100, [0.53, 0.51, 0.77]
         );
 
@@ -56,7 +56,7 @@ export class Gloom {
             0.5127, 0.1137, 0.3517, 0.1484, 0.2647, 0.1658
         ];
 
-        const mulutDalam = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _MMatrix,
+        const mulutDalam = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal,
             mulutControlPointsDalam, 0.05, 20, 100, [0.929, 0.678, 0.706]
         );
 
@@ -72,21 +72,21 @@ export class Gloom {
             0.3880, -0.0775, 0.2531, -0.1383, 0.1313, -0.1557, -0.0906, -0.1209
         ];
 
-        const mataKiri = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _MMatrix,
+        const mataKiri = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal,
             mataKiriControlPoints, 0.03, 20, 100, [0.1, 0.1, 0.1]
         );
 
-        const mataKanan = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _MMatrix,
+        const mataKanan = new bSplineMulut(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal,
             mataKananControlPoints, 0.03, 20, 100, [0.1, 0.1, 0.1]
         );
 
-        const putihbolarambutDepan = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color,
+        const putihbolarambutDepan = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.3, 0.3, 0.3, 20, 20, [1.0, 1.0, 1.0]);
-        const putihbolarambutBelakang = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color,
+        const putihbolarambutBelakang = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.3, 0.3, 0.3, 20, 20, [1.0, 1.0, 1.0]);
-        const putihbolarambutKanan = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color,
+        const putihbolarambutKanan = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.3, 0.3, 0.3, 20, 20, [1.0, 1.0, 1.0]);
-        const putihbolarambutKiri = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color,
+        const putihbolarambutKiri = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal,
             0.3, 0.3, 0.3, 20, 20, [1.0, 1.0, 1.0]);
 
         // Hierarki
@@ -150,15 +150,15 @@ export class Gloom {
         LIBS.translateX(iler2.POSITION_MATRIX, 0.45);
         LIBS.rotateX(iler2.POSITION_MATRIX, 1.57);
 
-        LIBS.translateX(mataKiri.POSITION_MATRIX, 0.7);
-        LIBS.translateY(mataKiri.POSITION_MATRIX, 0.2);
-        LIBS.translateZ(mataKiri.POSITION_MATRIX, 1.1);
         LIBS.rotateY(mataKiri.POSITION_MATRIX, 0.5);
+        LIBS.translateZ(mataKiri.POSITION_MATRIX, 1.1);
+        LIBS.translateY(mataKiri.POSITION_MATRIX, 0.2);
+        LIBS.translateX(mataKiri.POSITION_MATRIX, 0.7);
 
-        LIBS.translateX(mataKanan.POSITION_MATRIX, -0.7);
-        LIBS.translateY(mataKanan.POSITION_MATRIX, 0.2);
-        LIBS.translateZ(mataKanan.POSITION_MATRIX, 1.1);
         LIBS.rotateY(mataKanan.POSITION_MATRIX, -0.58);
+        LIBS.translateZ(mataKanan.POSITION_MATRIX, 1.1);
+        LIBS.translateY(mataKanan.POSITION_MATRIX, 0.2);
+        LIBS.translateX(mataKanan.POSITION_MATRIX, -0.7);
 
         LIBS.translateY(putihbolarambutDepan.POSITION_MATRIX, 1.68);
         LIBS.translateZ(putihbolarambutDepan.POSITION_MATRIX, 1);
