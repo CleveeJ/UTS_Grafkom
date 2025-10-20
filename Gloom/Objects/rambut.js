@@ -24,7 +24,7 @@ export class Rambut {
 
     childs = [];
 
-    constructor(GL, SHADER_PROGRAM, _position, _color, _normal, _MMatrix) {
+    constructor(GL, SHADER_PROGRAM, _position, _color, _MMatrix, _normal) {
         this.GL = GL;
         this.SHADER_PROGRAM = SHADER_PROGRAM;
         this._position = _position;
