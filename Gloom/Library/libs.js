@@ -118,5 +118,12 @@ var LIBS = {
             }
         }
         return rm;
+    },
+
+    scale: function (m, v) {
+        const sx = v[0], sy = v[1], sz = v[2];
+        m[0] *= sx; m[1] *= sx; m[2] *= sx;
+        m[4] *= sy; m[5] *= sy; m[6] *= sy;
+        m[8] *= sz; m[9] *= sz; m[10] *= sz;
     }
 };
