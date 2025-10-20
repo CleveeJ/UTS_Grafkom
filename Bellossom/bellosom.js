@@ -5,60 +5,60 @@ import { Toroid } from "./Objects/Toroid.js";
 
 export class Bellossom{
     root = null;
-    constructor(GL, SHADER_PROGRAM, _position, _color,){
+    constructor(GL, SHADER_PROGRAM, _position, _color, _normal){
         // ======================== BAGIAN DEFINISI ===================
 
         //Kepala, Badan, Tangan
-        var Head = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 1.7, 1.7, 1.7, 20, 20, [0.7686, 0.8588, 0.6118]);
-        var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, 1.2, 0.5, 1.2, 2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.3, 0.3, 0.3, 2, 20, 10, [0.8, 0.2, 0.6118]);
-        var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.3, 0.3, 0.3, 2, 20, 10, [0.5, 0.6, 0.6118]);
+        var Head = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 1.7, 1.7, 1.7, 20, 20, [0.7686, 0.8588, 0.6118]);
+        var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 1.2, 0.5, 1.2, 2, 20, 10, [0.3, 0.1, 0.6118]);
+        var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.8, 0.2, 0.6118]);
+        var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.5, 0.6, 0.6118]);
 
         //Rok Luar
         var Skirt1 = [
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), -1/6],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 1/6],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.9569, 0.9059, 0.5333]), 3/6],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 5/6],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 7/6],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.9569, 0.9059, 0.5333]), 9/6],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), -1/6],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 1/6],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.9569, 0.9059, 0.5333]), 3/6],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 5/6],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 7/6],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.9569, 0.9059, 0.5333]), 9/6],
         ];
 
         //Rok Dalam
         var Skirt2 = [
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.9569, 0.9059, 0.5333]), 0],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 1/3],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 2/3],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.9569, 0.9059, 0.5333]), 1],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 4/3],
-            [new Leaf(GL, SHADER_PROGRAM, _position, _color, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 5/3],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.9569, 0.9059, 0.5333]), 0],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 1/3],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 2/3],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.9569, 0.9059, 0.5333]), 1],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 4/3],
+            [new Leaf(GL, SHADER_PROGRAM, _position, _color, _normal, 1.0, 0.8, 20, 36, [0.0, 0.7, 0.1]), 5/3],
         ];
 
         //Bunga di sisi Kepala Kiri
-        var Flower_Torus1 = new Toroid(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Flower_Elipsoid1 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.4, 0.1, 20, 20, [0.8, 0.2, 0.6118]);
+        var Flower_Torus1 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.3, 0.1, 0.6118]);
+        var Flower_Elipsoid1 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.8, 0.2, 0.6118]);
         var Sepals1 = [
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 1/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 3/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 5/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 1/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 3/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 5/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
         ]
 
         //Bunga di sisi Kepala Kanan
-        var Flower_Torus2 = new Toroid(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Flower_Elipsoid2 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.4, 0.1, 20, 20, [0.8, 0.2, 0.6118]);
+        var Flower_Torus2 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.3, 0.1, 0.6118]);
+        var Flower_Elipsoid2 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.8, 0.2, 0.6118]);
         var Sepals2 = [
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 1/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 3/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 5/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 1/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 3/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 5/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
         ]
 
         // Mata
-        var LeftEye = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 0.2, 0.2, 0.2, 20, 20, [0, 0, 0]);
-        var RightEye = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, 0.2, 0.2, 0.2, 20, 20, [0, 0, 0]);
+        var LeftEye = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.2, 0.2, 0.2, 20, 20, [0, 0, 0]);
+        var RightEye = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.2, 0.2, 0.2, 20, 20, [0, 0, 0]);
 
         // ============= END OF DEFINISI ===================
 
