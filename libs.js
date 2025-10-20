@@ -150,4 +150,16 @@ export const mat4 = {
     out[14] = a[14]; out[15] = a[15];
     return out;
   },
+
+  scale: function (out, a, v) {
+    const x = v[0], y = v[1], z = v[2];
+    if (a !== out) {
+      for (let i = 0; i < 12; i++) out[i] = a[i];
+    }
+    out[0] *= x; out[1] *= x; out[2] *= x; out[3] *= x;
+    out[4] *= y; out[5] *= y; out[6] *= y; out[7] *= y;
+    out[8] *= z; out[9] *= z; out[10] *= z; out[11] *= z;
+    return out;
+  },
+
 };

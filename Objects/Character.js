@@ -14,7 +14,7 @@ export class Character {
 
     // Komponen utama karakter
     this.body = new Body(gl, program);
-    this.bunga = new Flower(gl, program);
+    this.flower = new Flower(gl, program);
     this.mata = new Mata(gl, program);
     this.senyum = new Smile(gl, program);
 
@@ -28,50 +28,56 @@ export class Character {
     this.footRight = new FootRight(gl, program, 0.12, 0.8, limbColor);
   }
 
-  draw(baseMatrix, projectionMatrix) {
+  draw(baseMatrix, projectionMatrix, time = 0) {
     const gl = this.gl;
+
+    // ===== ambil sudut miring sinkron dengan bunga =====
+    const tilt = Math.sin(time * 0.5) * 0.1; // arah sama dgn bunga
+    const floatY = Math.sin(time * 0.8) * 0.05; // naik-turun halus
 
     // ===== BADAN =====
     let bodyMatrix = baseMatrix.slice();
-    mat4.translate(bodyMatrix, bodyMatrix, [0, 0, -1.2]);
+    mat4.translate(bodyMatrix, bodyMatrix, [0, floatY, -1.25]);
     mat4.rotateX(bodyMatrix, bodyMatrix, LIBS.degToRad(90));
+    // mat4.rotateZ(bodyMatrix, bodyMatrix, -tilt); // miring sama arah dgn bunga
     this.body.draw(bodyMatrix, projectionMatrix);
 
     // ===== MATA =====
-    this.mata.draw(bodyMatrix, projectionMatrix);
+    this.mata.draw(bodyMatrix, projectionMatrix, time);
 
     // ===== SENYUM =====
     this.senyum.draw(bodyMatrix, projectionMatrix);
 
-    // ===== BUNGA DI ATAS KEPALA =====
+    // ===== BUNGA =====
     let flowerMatrix = baseMatrix.slice();
-    mat4.translate(flowerMatrix, flowerMatrix, [0, 1.1, 0]);
-    this.bunga.draw(flowerMatrix, projectionMatrix);
+    mat4.translate(flowerMatrix, flowerMatrix, [0, 1.1 + floatY, 0]);
+    mat4.rotateZ(flowerMatrix, flowerMatrix, tilt); // ikut arah badan
+    this.flower.draw(flowerMatrix, projectionMatrix, time);
 
     // ===== TANGAN KIRI =====
     let handL = bodyMatrix.slice();
-    mat4.translate(handL, handL, [-1.0, 0, 0.0]);  // geser ke kiri
+    mat4.translate(handL, handL, [-1.0, 0, 0.0]);
     mat4.rotateZ(handL, handL, LIBS.degToRad(-90));
     mat4.rotateX(handL, handL, LIBS.degToRad(60));
-    this.handLeft.draw(handL);
+    this.handLeft.draw(handL, projectionMatrix);
 
     // ===== TANGAN KANAN =====
     let handR = bodyMatrix.slice();
-    mat4.translate(handR, handR, [1.0, 0, 0.0]);  // geser ke kanan
+    mat4.translate(handR, handR, [1.0, 0, 0.0]);
     mat4.rotateZ(handR, handR, LIBS.degToRad(90));
     mat4.rotateX(handR, handR, LIBS.degToRad(60));
-    this.handRight.draw(handR);
+    this.handRight.draw(handR, projectionMatrix);
 
     // ===== KAKI KIRI =====
     let footL = bodyMatrix.slice();
-    mat4.translate(footL, footL, [-0.4, -1.0, 0.0]); // bawah kiri
+    mat4.translate(footL, footL, [-0.4, -1.0, 0.0]);
     mat4.rotateZ(footL, footL, LIBS.degToRad(-10));
-    this.footLeft.draw(footL);
+    this.footLeft.draw(footL, projectionMatrix);
 
     // ===== KAKI KANAN =====
     let footR = bodyMatrix.slice();
-    mat4.translate(footR, footR, [0.4, -1.0, 0.0]); // bawah kanan
+    mat4.translate(footR, footR, [0.4, -1.0, 0.0]);
     mat4.rotateZ(footR, footR, LIBS.degToRad(10));
-    this.footRight.draw(footR);
+    this.footRight.draw(footR, projectionMatrix);
   }
 }

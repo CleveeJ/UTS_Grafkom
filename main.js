@@ -6,19 +6,30 @@ function main() {
   const shaderProgram = initShader(gl);
   const character = new Character(gl, shaderProgram);
 
-  let rotationX = 0, rotationY = 0;
-  let dragging = false, lastX, lastY;
+  let rotationX = 0,
+    rotationY = 0;
+  let dragging = false,
+    lastX,
+    lastY;
   const canvas = gl.canvas;
 
-  canvas.addEventListener("mousedown", e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
-  canvas.addEventListener("mouseup", () => dragging = false);
-  canvas.addEventListener("mousemove", e => {
+  canvas.addEventListener("mousedown", (e) => {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+  });
+  canvas.addEventListener("mouseup", () => (dragging = false));
+  canvas.addEventListener("mousemove", (e) => {
     if (!dragging) return;
-    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    const dx = e.clientX - lastX,
+      dy = e.clientY - lastY;
     rotationY += dx * 0.01;
     rotationX += dy * 0.01;
-    lastX = e.clientX; lastY = e.clientY;
+    lastX = e.clientX;
+    lastY = e.clientY;
   });
+
+  let time = 0;
 
   function render() {
     gl.clearColor(226 / 255, 198 / 255, 255 / 255, 1.0);
@@ -26,7 +37,13 @@ function main() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     const projectionMatrix = mat4.create();
-    mat4.perspective(projectionMatrix, LIBS.degToRad(45), gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
+    mat4.perspective(
+      projectionMatrix,
+      LIBS.degToRad(45),
+      gl.canvas.clientWidth / gl.canvas.clientHeight,
+      0.1,
+      100.0
+    );
 
     let modelViewMatrix = mat4.create();
     mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.9, -5.0]);
@@ -34,8 +51,10 @@ function main() {
     mat4.rotateY(modelViewMatrix, modelViewMatrix, rotationY);
     mat4.rotateX(modelViewMatrix, modelViewMatrix, rotationX);
 
-    character.draw(modelViewMatrix, projectionMatrix);
+    // kirim nilai waktu
+    character.draw(modelViewMatrix, projectionMatrix, time);
 
+    time += 0.02; // kecepatan animasi
     requestAnimationFrame(render);
   }
 
@@ -65,10 +84,19 @@ function initShader(gl) {
   gl.linkProgram(shaderProgram);
   gl.useProgram(shaderProgram);
 
-  shaderProgram.aVertexPosition = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+  shaderProgram.aVertexPosition = gl.getAttribLocation(
+    shaderProgram,
+    "aVertexPosition"
+  );
   shaderProgram.uColor = gl.getUniformLocation(shaderProgram, "uColor");
-  shaderProgram.uModelViewMatrix = gl.getUniformLocation(shaderProgram, "uModelViewMatrix");
-  shaderProgram.uProjectionMatrix = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
+  shaderProgram.uModelViewMatrix = gl.getUniformLocation(
+    shaderProgram,
+    "uModelViewMatrix"
+  );
+  shaderProgram.uProjectionMatrix = gl.getUniformLocation(
+    shaderProgram,
+    "uProjectionMatrix"
+  );
 
   return shaderProgram;
 }
