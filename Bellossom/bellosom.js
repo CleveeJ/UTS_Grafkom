@@ -215,6 +215,10 @@ export class Bellossom{
             LIBS.translateY(element[0].POSITION_MATRIX, -0.5)
         }
 
+        this.Skirt1 = Skirt1;
+        this.Skirt2 = Skirt2;
+        this.Left_Hand = Left_Hand;
+        this.Right_Hand = Right_Hand;
         // ======================= END OF POSITIONING =======================
     }
 
@@ -223,6 +227,47 @@ export class Bellossom{
     }
 
     render(Mmatrix, PARENT_MATRIX){
+        const time = performance.now() * 0.002; // biar halus
+        const swingAngle = Math.sin(time) * (Math.PI / 24); // ±7.5° serempak
+
+        // Semua bagian rok luar ayun bareng
+        for (let index = 0; index < this.Skirt1.length; index++) {
+            const element = this.Skirt1[index];
+            element[0].MOVE_MATRIX = LIBS.get_I4();
+
+            LIBS.rotateZ(element[0].MOVE_MATRIX, swingAngle);
+        }
+
+        // Semua bagian rok dalam juga ayun bareng (bisa beda amplitudo biar lebih natural)
+        for (let index = 0; index < this.Skirt2.length; index++) {
+            const element = this.Skirt2[index];
+            element[0].MOVE_MATRIX = LIBS.get_I4();
+
+            LIBS.rotateZ(element[0].MOVE_MATRIX, swingAngle * 1.2); // sedikit lebih besar
+        }
+        // --- TANGAN KANAN AYUN MIRING ---
+        this.Right_Hand.MOVE_MATRIX = LIBS.get_I4();
+
+        // Rotasi kombinasi X dan Y → arah diagonal antara X dan Y
+        LIBS.rotateZ(this.Right_Hand.MOVE_MATRIX, -Math.PI / 4);
+
+        // Step 2: lakukan rotasi terhadap X
+        LIBS.rotateX(this.Right_Hand.MOVE_MATRIX, swingAngle * 1.5);
+
+        // Step 3: kembalikan orientasi semula
+        LIBS.rotateZ(this.Right_Hand.MOVE_MATRIX, Math.PI / 4);
+
+        // --- Tangan kiri (berlawanan arah biar natural) ---
+        this.Left_Hand.MOVE_MATRIX = LIBS.get_I4();
+
+        // Rotasi kombinasi X dan Y → arah diagonal antara X dan Y
+        LIBS.rotateZ(this.Left_Hand.MOVE_MATRIX, -Math.PI / 4);
+
+        // Step 2: lakukan rotasi terhadap X
+        LIBS.rotateX(this.Left_Hand.MOVE_MATRIX, -swingAngle * 1.5);
+
+        // Step 3: kembalikan orientasi semula
+        LIBS.rotateZ(this.Left_Hand.MOVE_MATRIX, Math.PI / 4);
         this.root.render(Mmatrix, PARENT_MATRIX);
     }
 }
