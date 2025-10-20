@@ -1,4 +1,4 @@
-import { SceneObject } from "../Vileplume/Objects/SceneObject.js";
+import { SceneObject } from "../Objects/SceneObject.js";
 
 export class Cylinder extends SceneObject {
   constructor(
