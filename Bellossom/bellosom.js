@@ -2,6 +2,7 @@ import { Ellipsoid } from "./Objects/Ellipsoid.js";
 import { Capsule } from "./Objects/Capsule.js";
 import { Leaf } from "./Objects/Leaf.js";
 import { Toroid } from "./Objects/Toroid.js";
+import { bSplineMulut } from "./Objects/bSplineMulut.js";
 
 export class Bellossom{
     root = null;
@@ -13,6 +14,26 @@ export class Bellossom{
         var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 1.2, 0.5, 1.2, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
         var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
         var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
+        const controlPointsSmile = [
+            -0.35, -0.02,   // kiri luar sedikit turun
+            -0.2, -0.06,    // kiri bawah
+            0.0,  -0.20,     // tengah atas (puncak senyum)
+            0.2, -0.06,     // kanan bawah
+            0.35, -0.02     // kanan luar
+        ];
+
+        const Mouth = new bSplineMulut(
+            GL,
+            SHADER_PROGRAM,
+            _position,
+            _color,
+            _normal,
+            controlPointsSmile,
+            0.025,   // radius (ketebalan sosis)
+            24,      // segments keliling
+            300,     // detail kurva
+            [0.7, 0.2, 0.2] // warna merah muda / bibir
+        );
 
         //Rok Luar
         var Skirt1 = [
@@ -73,6 +94,7 @@ export class Bellossom{
         Flower_Torus1.childs.push(Flower_Elipsoid1);
         Head.childs.push(Flower_Torus2);
         Flower_Torus2.childs.push(Flower_Elipsoid2);
+        Head.childs.push(Mouth);
 
         for (let index = 0; index < Sepals1.length; index++) {
             const element = Sepals1[index];
@@ -97,6 +119,10 @@ export class Bellossom{
         // ==================== END OF HIERARKI =======================
 
         // ==================== BAGIAN POSITIONING NYA ==================
+        //Mulut
+        LIBS.translateZ(Mouth.POSITION_MATRIX, 1.7);
+        LIBS.translateY(Mouth.POSITION_MATRIX, -0.2);
+
         //Bunga sisi kiri kepala
         LIBS.translateZ(Flower_Torus1.POSITION_MATRIX, 1.7);
         var temp = LIBS.get_I4();
