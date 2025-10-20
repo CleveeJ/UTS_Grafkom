@@ -217,7 +217,7 @@ export class bSplineMulut {
 
   render(_MMatrix, parentMatrix) {
     const GL = this.GL;
-    this.MODEL_MATRIX = LIBS.multiply(parentMatrix, LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX));
+    this.MODEL_MATRIX = LIBS.multiply(LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX), parentMatrix);
 
     GL.useProgram(this.SHADER_PROGRAM);
     GL.uniformMatrix4fv(this._Mmatrix, false, this.MODEL_MATRIX);

@@ -117,7 +117,7 @@ export class BolaRambut {
             }
 
             // combine dengan parent matrix
-            M = LIBS.multiply(PARENT_MATRIX, LIBS.multiply(this.MOVE_MATRIX, M));
+            M = LIBS.multiply(LIBS.multiply(this.MOVE_MATRIX, M), PARENT_MATRIX);
 
             gl.uniformMatrix4fv(this._MMatrix, false, M);
 

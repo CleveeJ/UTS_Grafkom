@@ -150,15 +150,15 @@ export class Gloom {
         LIBS.translateX(iler2.POSITION_MATRIX, 0.45);
         LIBS.rotateX(iler2.POSITION_MATRIX, 1.57);
 
-        LIBS.translateX(mataKiri.POSITION_MATRIX, 0.7);
-        LIBS.translateY(mataKiri.POSITION_MATRIX, 0.2);
-        LIBS.translateZ(mataKiri.POSITION_MATRIX, 1.1);
         LIBS.rotateY(mataKiri.POSITION_MATRIX, 0.5);
+        LIBS.translateZ(mataKiri.POSITION_MATRIX, 1.1);
+        LIBS.translateY(mataKiri.POSITION_MATRIX, 0.2);
+        LIBS.translateX(mataKiri.POSITION_MATRIX, 0.7);
 
-        LIBS.translateX(mataKanan.POSITION_MATRIX, -0.7);
-        LIBS.translateY(mataKanan.POSITION_MATRIX, 0.2);
-        LIBS.translateZ(mataKanan.POSITION_MATRIX, 1.1);
         LIBS.rotateY(mataKanan.POSITION_MATRIX, -0.58);
+        LIBS.translateZ(mataKanan.POSITION_MATRIX, 1.1);
+        LIBS.translateY(mataKanan.POSITION_MATRIX, 0.2);
+        LIBS.translateX(mataKanan.POSITION_MATRIX, -0.7);
 
         LIBS.translateY(putihbolarambutDepan.POSITION_MATRIX, 1.68);
         LIBS.translateZ(putihbolarambutDepan.POSITION_MATRIX, 1);

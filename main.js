@@ -64,9 +64,9 @@ function main() {
     const _Mmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Mmatrix");
 
     /*================ OBJECTS =================*/
-    // const gloom = new Gloom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
-    // LIBS.translateX(gloom.root.POSITION_MATRIX, -1);
-    // gloom.setup();
+    const gloom = new Gloom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
+    LIBS.translateX(gloom.root.POSITION_MATRIX, -1);
+    gloom.setup();
 
     const bellossom = new Bellossom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix);
     LIBS.translateX(bellossom.root.POSITION_MATRIX, 4);
@@ -123,7 +123,7 @@ function main() {
         GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 
         // Render badan (beserta semua anak)
-        // gloom.render(_Mmatrix, LIBS.get_I4());
+        gloom.render(_Mmatrix, LIBS.get_I4());
         bellossom.render(_Mmatrix, LIBS.get_I4());
 
         requestAnimationFrame(animate);
