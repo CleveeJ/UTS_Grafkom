@@ -1,4 +1,5 @@
-import { Bellossom } from "./bellosom.js";
+import { Bellossom } from "./Bellossom/bellosom.js";
+import { Character } from "./VileplumeBaru/Character.js";
 function main() {
     const CANVAS = document.getElementById("mycanvas");
     CANVAS.width = window.innerWidth;
@@ -82,14 +83,20 @@ function main() {
     const _Pmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Pmatrix");
     const _Vmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Vmatrix");
     const _Mmatrix = GL.getUniformLocation(SHADER_PROGRAM, "Mmatrix");
+    const _uProjectionMatrix = GL.getUniformLocation(SHADER_PROGRAM, "uProjectionMatrix");
+    const _uViewModelMatrix = GL.getUniformLocation(SHADER_PROGRAM, "uViewModelMatrix");
 
     GL.useProgram(SHADER_PROGRAM);
 
     /*========================= OBJECTS ========================= */
 
     var BellossomObject = new Bellossom(GL, SHADER_PROGRAM, _position, _color);
+    const character = new Character(GL, SHADER_PROGRAM, _position, _color);
+
+    LIBS.translateX(BellossomObject.root.POSITION_MATRIX, 4);
 
     BellossomObject.setup();
+    character.setup();
     
     // ------------------------- END -----------------------
 
@@ -108,6 +115,8 @@ function main() {
     GL.depthFunc(GL.LEQUAL);
     GL.clearColor(0.9, 0.9, 0.9, 1.0);
     GL.clearDepth(1.0);
+
+    let time = 0;
 
     function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
@@ -134,6 +143,9 @@ function main() {
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
         
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
+        character.render(_Mmatrix, LIBS.get_I4(), time)
+    
+        time += 0.02; // kecepatan animasi
         GL.flush();
         window.requestAnimationFrame(animate);
     }

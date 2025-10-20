@@ -1,4 +1,4 @@
-import { mat4, LIBS } from "../libs.js";
+import { mat4, LIBSS } from "../libs.js";
 import { Body } from "./Body.js";
 import { Flower } from "./Flower.js";
 import { Mata } from "./Mata.js";
@@ -30,6 +30,7 @@ export class Character {
 
   draw(baseMatrix, projectionMatrix, time = 0) {
     const gl = this.gl;
+    gl.useProgram(this.program);
 
     // ===== ambil sudut miring sinkron dengan bunga =====
     const tilt = Math.sin(time * 0.5) * 0.1; // arah sama dgn bunga
@@ -38,7 +39,7 @@ export class Character {
     // ===== BADAN =====
     let bodyMatrix = baseMatrix.slice();
     mat4.translate(bodyMatrix, bodyMatrix, [0, floatY, -1.25]);
-    mat4.rotateX(bodyMatrix, bodyMatrix, LIBS.degToRad(90));
+    mat4.rotateX(bodyMatrix, bodyMatrix, LIBSS.degToRad(90));
     // mat4.rotateZ(bodyMatrix, bodyMatrix, -tilt); // miring sama arah dgn bunga
     this.body.draw(bodyMatrix, projectionMatrix);
 
@@ -57,27 +58,27 @@ export class Character {
     // ===== TANGAN KIRI =====
     let handL = bodyMatrix.slice();
     mat4.translate(handL, handL, [-1.0, 0, 0.0]);
-    mat4.rotateZ(handL, handL, LIBS.degToRad(-90));
-    mat4.rotateX(handL, handL, LIBS.degToRad(60));
+    mat4.rotateZ(handL, handL, LIBSS.degToRad(-90));
+    mat4.rotateX(handL, handL, LIBSS.degToRad(60));
     this.handLeft.draw(handL, projectionMatrix);
 
     // ===== TANGAN KANAN =====
     let handR = bodyMatrix.slice();
     mat4.translate(handR, handR, [1.0, 0, 0.0]);
-    mat4.rotateZ(handR, handR, LIBS.degToRad(90));
-    mat4.rotateX(handR, handR, LIBS.degToRad(60));
+    mat4.rotateZ(handR, handR, LIBSS.degToRad(90));
+    mat4.rotateX(handR, handR, LIBSS.degToRad(60));
     this.handRight.draw(handR, projectionMatrix);
 
     // ===== KAKI KIRI =====
     let footL = bodyMatrix.slice();
     mat4.translate(footL, footL, [-0.4, -1.0, 0.0]);
-    mat4.rotateZ(footL, footL, LIBS.degToRad(-10));
+    mat4.rotateZ(footL, footL, LIBSS.degToRad(-10));
     this.footLeft.draw(footL, projectionMatrix);
 
     // ===== KAKI KANAN =====
     let footR = bodyMatrix.slice();
     mat4.translate(footR, footR, [0.4, -1.0, 0.0]);
-    mat4.rotateZ(footR, footR, LIBS.degToRad(10));
+    mat4.rotateZ(footR, footR, LIBSS.degToRad(10));
     this.footRight.draw(footR, projectionMatrix);
   }
 }

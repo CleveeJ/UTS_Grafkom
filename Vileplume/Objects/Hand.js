@@ -1,4 +1,4 @@
-import { mat4, LIBS } from "../libs.js";
+import { mat4, LIBSS } from "../libs.js";
 import { Ellipsoid } from "../Geometry/Ellipsoid.js";
 import { Cylinder } from "../Geometry/Cylinder.js";
 

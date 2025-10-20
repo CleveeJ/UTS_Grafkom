@@ -1,5 +1,5 @@
 import { BezierCircle } from "../Geometry/BezierCircle.js";
-import { mat4, LIBS } from "../libs.js";
+import { mat4, LIBSS } from "../libs.js";
 
 export class Mata {
   constructor(gl, program) {
@@ -24,8 +24,8 @@ export class Mata {
     // ===== MATA KIRI (tetap normal) =====
     let ML = bodyMatrix.slice();
     mat4.translate(ML, ML, [-0.3, 0.28, 0.725]);
-    mat4.rotateX(ML, ML, LIBS.degToRad(-18));
-    mat4.rotateY(ML, ML, LIBS.degToRad(-18));
+    mat4.rotateX(ML, ML, LIBSS.degToRad(-18));
+    mat4.rotateY(ML, ML, LIBSS.degToRad(-18));
     this.leftEye[0].draw(ML);
     let ML2 = ML.slice(); mat4.translate(ML2, ML2, [0, 0, 0.01]); this.leftEye[1].draw(ML2);
     let ML3 = ML2.slice(); mat4.translate(ML3, ML3, [0, 0, 0.01]); this.leftEye[2].draw(ML3);
@@ -33,13 +33,13 @@ export class Mata {
     // ===== MATA KANAN =====
     let MR = bodyMatrix.slice();
     mat4.translate(MR, MR, [0.3, 0.28, 0.725]);
-    mat4.rotateX(MR, MR, LIBS.degToRad(-18));
-    mat4.rotateY(MR, MR, LIBS.degToRad(18));
+    mat4.rotateX(MR, MR, LIBSS.degToRad(-18));
+    mat4.rotateY(MR, MR, LIBSS.degToRad(18));
 
     // fase animasi (0 → normal, mendekati π → mengecil, lalu balik)
     const phase = (Math.sin(time * 2.0) + 1) / 2; // 0..1
     const winkScale = 0.3 + phase * 0.7;          // 0.3–1.0
-    const tilt = (1 - phase) * LIBS.degToRad(15); // makin miring saat hampir tutup
+    const tilt = (1 - phase) * LIBSS.degToRad(15); // makin miring saat hampir tutup
 
     if (winkScale > 0.45) {
       // --- fase mata masih "bulat" ---

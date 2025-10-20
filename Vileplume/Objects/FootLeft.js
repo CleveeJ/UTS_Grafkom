@@ -1,4 +1,4 @@
-import { mat4, LIBS } from "../libs.js";
+import { mat4, LIBSS } from "../libs.js";
 import { Ellipsoid } from "../Geometry/Ellipsoid.js";
 import { Cylinder } from "../Geometry/Cylinder.js";
 
@@ -30,7 +30,7 @@ export class FootLeft {
 
     // batang utama
     mat4.translate(baseMatrix, baseMatrix, [0, -0.25, 0]);
-    mat4.rotateY(baseMatrix, baseMatrix, LIBS.degToRad(-20));
+    mat4.rotateY(baseMatrix, baseMatrix, LIBSS.degToRad(-20));
     this.cylinder.draw(baseMatrix);
 
     // ujung atas (pinggul)
@@ -46,7 +46,7 @@ export class FootLeft {
     // telapak kaki
     let Mfoot = Mbot.slice();
     mat4.translate(Mfoot, Mfoot, [0, 0, 0]);
-    mat4.rotateX(Mfoot, Mfoot, LIBS.degToRad(90)); // putar rebah ke depan
+    mat4.rotateX(Mfoot, Mfoot, LIBSS.degToRad(90)); // putar rebah ke depan
     mat4.translate(Mfoot, Mfoot, [0, 0, -0.25]);
     this.foot.draw(Mfoot);
   }

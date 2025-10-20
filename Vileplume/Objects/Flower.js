@@ -3,7 +3,7 @@ import { Disk } from "../Geometry/Disk.js";
 import { EllipticParaboloid } from "../Geometry/EllipticParaboloid.js";
 import { PetalRim } from "../Geometry/PetalRim.js";
 import { BezierCircle } from "../Geometry/BezierCircle.js";
-import { mat4, LIBS } from "../libs.js";
+import { mat4, LIBSS } from "../libs.js";
 
 export class Flower {
   constructor(gl, program) {
@@ -121,7 +121,7 @@ export class Flower {
     const PETAL_COUNT = 5;
     // const PETAL_RADIUS = 0.8 * scale;
     const PETAL_RADIUS = 0.8;
-    const PETAL_TILT = LIBS.degToRad(-5 + Math.sin(time) * -3);
+    const PETAL_TILT = LIBSS.degToRad(-5 + Math.sin(time) * -3);
     const PETAL_Y_OFFSET = -1.02 + floatY;
     const PETAL_Z_FLAT = -0.11;
 
@@ -130,7 +130,7 @@ export class Flower {
         (i * 2 * Math.PI) / PETAL_COUNT +
         Math.PI / 2 +
         Math.PI +
-        LIBS.degToRad(-25);
+        LIBSS.degToRad(-25);
       let M = baseAnim.slice();
 
       // Rotate arbitrary axis (miring bolak-balik)

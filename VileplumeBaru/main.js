@@ -1,4 +1,4 @@
-import { Bellossom } from "./bellosom.js";
+import { Character } from "./Character.js";
 function main() {
     const CANVAS = document.getElementById("mycanvas");
     CANVAS.width = window.innerWidth;
@@ -87,7 +87,7 @@ function main() {
 
     /*========================= OBJECTS ========================= */
 
-    var BellossomObject = new Bellossom(GL, SHADER_PROGRAM, _position, _color);
+    var BellossomObject = new Character(GL, SHADER_PROGRAM, _position, _color);
 
     BellossomObject.setup();
     
@@ -108,6 +108,8 @@ function main() {
     GL.depthFunc(GL.LEQUAL);
     GL.clearColor(0.9, 0.9, 0.9, 1.0);
     GL.clearDepth(1.0);
+
+    let time = 0;
 
     function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
@@ -133,9 +135,10 @@ function main() {
 
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
         
-        BellossomObject.render(_Mmatrix, LIBS.get_I4());
+        BellossomObject.render(_Mmatrix, LIBS.get_I4(), time);
         GL.flush();
         window.requestAnimationFrame(animate);
+        time += 0.02;
     }
     animate();
 }
