@@ -85,75 +85,6 @@ function main() {
 
     badan.setup();
 
-    LIBS.translateY(legKiri.POSITION_MATRIX, -1.2);
-    LIBS.translateX(legKiri.POSITION_MATRIX, -0.4);
-
-    LIBS.translateY(legKanan.POSITION_MATRIX, -1.2);
-    LIBS.translateX(legKanan.POSITION_MATRIX, 0.4);
-
-    LIBS.rotateX(footKanan.POSITION_MATRIX, -1.5);
-    LIBS.rotateY(footKanan.POSITION_MATRIX, 0.8);
-    LIBS.translateX(footKanan.POSITION_MATRIX, 0.3);
-    LIBS.translateY(footKanan.POSITION_MATRIX, -0.35);
-    LIBS.translateZ(footKanan.POSITION_MATRIX, 0.3);
-
-    LIBS.rotateX(footKiri.POSITION_MATRIX, -1.5);
-    LIBS.rotateY(footKiri.POSITION_MATRIX, -0.8);
-    LIBS.translateX(footKiri.POSITION_MATRIX, -0.3);
-    LIBS.translateY(footKiri.POSITION_MATRIX, -0.35);
-    LIBS.translateZ(footKiri.POSITION_MATRIX, 0.3);
-
-    LIBS.rotateX(handKanan.POSITION_MATRIX, -1.5);
-    LIBS.rotateY(handKanan.POSITION_MATRIX, -1);
-    LIBS.translateX(handKanan.POSITION_MATRIX, -1.4);
-    LIBS.translateY(handKanan.POSITION_MATRIX, -0.3);
-    LIBS.translateZ(handKanan.POSITION_MATRIX, 0.3);
-
-    LIBS.rotateX(handKiri.POSITION_MATRIX, -1.5);
-    LIBS.rotateY(handKiri.POSITION_MATRIX, 1);
-    LIBS.translateX(handKiri.POSITION_MATRIX, 1.4);
-    LIBS.translateY(handKiri.POSITION_MATRIX, -0.3);
-    LIBS.translateZ(handKiri.POSITION_MATRIX, 0.3);
-
-    LIBS.translateY(mulutLuar.POSITION_MATRIX, -0.27); 
-    LIBS.translateZ(mulutLuar.POSITION_MATRIX, 1.31);  
-    
-    LIBS.translateY(mulutDalam.POSITION_MATRIX, -0.36); 
-    LIBS.translateZ(mulutDalam.POSITION_MATRIX, 1.30);   
-    
-    LIBS.rotateX(iler1.POSITION_MATRIX, 1.6);
-    LIBS.translateY(iler1.POSITION_MATRIX, -0.08);
-    LIBS.translateX(iler1.POSITION_MATRIX, 0.38);
-    LIBS.rotateX(iler1.POSITION_MATRIX, 1.57); 
-    
-    LIBS.rotateX(iler2.POSITION_MATRIX, 1.6);
-    LIBS.translateY(iler2.POSITION_MATRIX, -0.05);
-    LIBS.translateX(iler2.POSITION_MATRIX, 0.45);
-    LIBS.rotateX(iler2.POSITION_MATRIX, 1.57); 
-
-    LIBS.translateX(mataKiri.POSITION_MATRIX, 0.7);
-    LIBS.translateY(mataKiri.POSITION_MATRIX, 0.2);
-    LIBS.translateZ(mataKiri.POSITION_MATRIX, 1.1);
-    LIBS.rotateY(mataKiri.POSITION_MATRIX, 0.5);
-
-    LIBS.translateX(mataKanan.POSITION_MATRIX, -0.7);
-    LIBS.translateY(mataKanan.POSITION_MATRIX, 0.2);
-    LIBS.translateZ(mataKanan.POSITION_MATRIX, 1.1);
-    LIBS.rotateY(mataKanan.POSITION_MATRIX, -0.58);
-
-    LIBS.translateY(putihbolarambutDepan.POSITION_MATRIX, 1.68);
-    LIBS.translateZ(putihbolarambutDepan.POSITION_MATRIX, 1);
-
-    LIBS.translateY(putihbolarambutBelakang.POSITION_MATRIX, 1.68);
-    LIBS.translateZ(putihbolarambutBelakang.POSITION_MATRIX, -1);
-
-    LIBS.translateX(putihbolarambutKanan.POSITION_MATRIX, 1);
-    LIBS.translateY(putihbolarambutKanan.POSITION_MATRIX, 1.68);
-
-    LIBS.translateX(putihbolarambutKiri.POSITION_MATRIX, -1);
-    LIBS.translateY(putihbolarambutKiri.POSITION_MATRIX, 1.68);
-    
-
     function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
@@ -179,7 +110,7 @@ function main() {
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
         
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
-
+    }
     animate();
 }
 
