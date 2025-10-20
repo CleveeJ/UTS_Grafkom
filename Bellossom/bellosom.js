@@ -10,9 +10,9 @@ export class Bellossom{
 
         //Kepala, Badan, Tangan
         var Head = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 1.7, 1.7, 1.7, 20, 20, [0.7686, 0.8588, 0.6118]);
-        var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 1.2, 0.5, 1.2, 2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.8, 0.2, 0.6118]);
-        var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.5, 0.6, 0.6118]);
+        var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 1.2, 0.5, 1.2, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
+        var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
+        var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
 
         //Rok Luar
         var Skirt1 = [
@@ -35,25 +35,25 @@ export class Bellossom{
         ];
 
         //Bunga di sisi Kepala Kiri
-        var Flower_Torus1 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Flower_Elipsoid1 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.8, 0.2, 0.6118]);
+        var Flower_Torus1 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.9921568627450981, 0.8980392156862745, 0.5058823529411764]);
+        var Flower_Elipsoid1 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.9921568627450981, 0.8980392156862745, 0.5058823529411764]);
         var Sepals1 = [
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 1/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 3/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 5/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 1/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 3/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 5/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 7/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 9/5],
         ]
 
         //Bunga di sisi Kepala Kanan
-        var Flower_Torus2 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Flower_Elipsoid2 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.8, 0.2, 0.6118]);
+        var Flower_Torus2 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.9921568627450981, 0.8980392156862745, 0.5058823529411764]);
+        var Flower_Elipsoid2 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.9921568627450981, 0.8980392156862745, 0.5058823529411764]);
         var Sepals2 = [
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 1/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 3/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 5/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 1/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 3/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 5/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 7/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 9/5],
         ]
 
         // Mata
