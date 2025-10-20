@@ -1,3 +1,4 @@
+
 function generateClosedBSpline(controlPoints, m, degree = 3) {
   const n_base = controlPoints.length / 2;
   const extendedPoints = [...controlPoints];

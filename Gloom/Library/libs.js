@@ -126,16 +126,13 @@ var LIBS = {
         return rm;
     },
 
-<<<<<<< HEAD:Library/libs.js
     clone: function (m) {
         return m.slice();
     },
-=======
     scale: function (m, v) {
         const sx = v[0], sy = v[1], sz = v[2];
         m[0] *= sx; m[1] *= sx; m[2] *= sx;
         m[4] *= sy; m[5] *= sy; m[6] *= sy;
         m[8] *= sz; m[9] *= sz; m[10] *= sz;
     }
->>>>>>> 8bd0dd9fd319508ad48e7c86a2b65e6c2244eb8f:Gloom/Library/libs.js
 };
