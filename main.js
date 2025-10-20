@@ -4,6 +4,32 @@ function main() {
     CANVAS.width = window.innerWidth;
     CANVAS.height = window.innerHeight;
 
+    var drag = false;
+    var x_prev, y_prev;
+    var mouseDown = function (e) {
+        drag = true;
+        x_prev = e.pageX, y_prev = e.pageY;
+        e.preventDefault();
+        return false;
+    };
+    var mouseUp = function (e) {
+        drag = false;
+    };
+    var mouseMove = function (e) {
+        if (!drag) return false;
+        dX = (e.pageX - x_prev) * 2 * Math.PI / CANVAS.width;
+        dY = (e.pageY - y_prev) * 2 * Math.PI / CANVAS.height;
+        THETA += dX;
+        PHI += dY;
+        x_prev = e.pageX, y_prev = e.pageY;
+        e.preventDefault();
+    };
+
+    CANVAS.addEventListener("mousedown", mouseDown, false);
+    CANVAS.addEventListener("mouseup", mouseUp, false);
+    CANVAS.addEventListener("mouseout", mouseUp, false);
+    CANVAS.addEventListener("mousemove", mouseMove, false);
+
     let GL = CANVAS.getContext("webgl", { antialias: true });
     if (!GL) {
         alert("WebGL tidak tersedia di browser ini");
@@ -82,8 +108,6 @@ function main() {
     GL.depthFunc(GL.LEQUAL);
     GL.clearColor(0.9, 0.9, 0.9, 1.0);
     GL.clearDepth(1.0);
-
-    badan.setup();
 
     function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
