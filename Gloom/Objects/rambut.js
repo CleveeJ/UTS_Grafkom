@@ -1,47 +1,46 @@
-// curve
+// =================================================
+// Rambut dengan normal buffer (untuk shading halus)
+// =================================================
 export class Rambut {
     GL = null;
     SHADER_PROGRAM = null;
 
     _position = null;
     _color = null;
+    _normal = null;
     _MMatrix = null;
 
     OBJECT_VERTEX = null;
     OBJECT_FACES = null;
+    OBJECT_NORMAL = null;
 
     vertex = [];
     faces = [];
+    normals = [];
 
-    POSITION_MATRIX = LIBS.get_I4(); // Mpos
-    MOVE_MATRIX     = LIBS.get_I4(); // Mmove
+    POSITION_MATRIX = LIBS.get_I4();
+    MOVE_MATRIX = LIBS.get_I4();
     MODEL_MATRIX = LIBS.get_I4();
 
     childs = [];
 
-    constructor(GL, SHADER_PROGRAM, _position, _color, _MMatrix) {
+    constructor(GL, SHADER_PROGRAM, _position, _color, _normal, _MMatrix) {
         this.GL = GL;
         this.SHADER_PROGRAM = SHADER_PROGRAM;
         this._position = _position;
         this._color = _color;
+        this._normal = _normal;
         this._MMatrix = _MMatrix;
 
-        // konfigurasi helai rambut
         this.helaiConfig = [
-            // belakang kiri
-            { panjang: 3.3, lebar: 0.8, tinggi: 1.1, alpha: -1, beta: 0.2, curveFactor: 10, posX: -0.1, posZ: 0.2, rotasiY: -0.8, rotasiZ: 0 }, 
-
-            // belakang kanan
-            { panjang: 3, lebar: 0.8,  tinggi: 1.1, alpha: 1, beta: 0.1, curveFactor: 0, posX: 0, posZ: 0.1, rotasiY: 4, rotasiZ: 0 }, 
-
-             // kiri depan
-            { panjang: 2.5, lebar: 0.8, tinggi: 1.1, alpha: 1.1, beta: 0.1, curveFactor: -1, posX: 0.15, posZ:  0.2, rotasiY:  0.6, rotasiZ: -0.15 }, 
-
-            // kanan depan
-            { panjang: 2.5, lebar: 0.8,  tinggi: 1.1, alpha: 1.1, beta: 0.1, curveFactor: -1, posX: -0.1, posZ:  0.2, rotasiY: 2.3, rotasiZ: 0 }, 
+            { panjang: 3.3, lebar: 0.8, tinggi: 1.1, alpha: -1, beta: 0.2, curveFactor: 10, posX: -0.1, posZ: 0.2, rotasiY: -0.8, rotasiZ: 0 },
+            { panjang: 3, lebar: 0.8, tinggi: 1.1, alpha: 1, beta: 0.1, curveFactor: 0, posX: 0, posZ: 0.1, rotasiY: 4, rotasiZ: 0 },
+            { panjang: 2.5, lebar: 0.8, tinggi: 1.1, alpha: 1.1, beta: 0.1, curveFactor: -1, posX: 0.15, posZ: 0.2, rotasiY: 0.6, rotasiZ: -0.15 },
+            { panjang: 2.5, lebar: 0.8, tinggi: 1.1, alpha: 1.1, beta: 0.1, curveFactor: -1, posX: -0.1, posZ: 0.2, rotasiY: 2.3, rotasiZ: 0 },
         ];
 
         this._generateMesh();
+        this._generateNormals(); // <- generate normal di constructor
     }
 
     _generateMesh() {
@@ -117,31 +116,81 @@ export class Rambut {
         this.faces = allFaces;
     }
 
-    setup() {
-        this.OBJECT_VERTEX = this.GL.createBuffer();
-        this.GL.bindBuffer(this.GL.ARRAY_BUFFER, this.OBJECT_VERTEX);
-        this.GL.bufferData(this.GL.ARRAY_BUFFER, new Float32Array(this.vertex), this.GL.STATIC_DRAW);
+    _generateNormals() {
+        const normals = new Array(this.vertex.length / 6).fill(0).map(() => [0, 0, 0]);
 
-        this.OBJECT_FACES = this.GL.createBuffer();
-        this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, this.OBJECT_FACES);
-        this.GL.bufferData(this.GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.faces), this.GL.STATIC_DRAW);
+        for (let i = 0; i < this.faces.length; i += 3) {
+            const ia = this.faces[i];
+            const ib = this.faces[i + 1];
+            const ic = this.faces[i + 2];
+
+            const ax = this.vertex[ia * 6], ay = this.vertex[ia * 6 + 1], az = this.vertex[ia * 6 + 2];
+            const bx = this.vertex[ib * 6], by = this.vertex[ib * 6 + 1], bz = this.vertex[ib * 6 + 2];
+            const cx = this.vertex[ic * 6], cy = this.vertex[ic * 6 + 1], cz = this.vertex[ic * 6 + 2];
+
+            const U = [bx - ax, by - ay, bz - az];
+            const V = [cx - ax, cy - ay, cz - az];
+            const N = [
+                U[1] * V[2] - U[2] * V[1],
+                U[2] * V[0] - U[0] * V[2],
+                U[0] * V[1] - U[1] * V[0],
+            ];
+
+            normals[ia][0] += N[0];
+            normals[ia][1] += N[1];
+            normals[ia][2] += N[2];
+            normals[ib][0] += N[0];
+            normals[ib][1] += N[1];
+            normals[ib][2] += N[2];
+            normals[ic][0] += N[0];
+            normals[ic][1] += N[1];
+            normals[ic][2] += N[2];
+        }
+
+        this.normals = normals.flat();
+    }
+
+    setup() {
+        const GL = this.GL;
+
+        this.OBJECT_VERTEX = GL.createBuffer();
+        GL.bindBuffer(GL.ARRAY_BUFFER, this.OBJECT_VERTEX);
+        GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(this.vertex), GL.STATIC_DRAW);
+
+        this.OBJECT_FACES = GL.createBuffer();
+        GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.OBJECT_FACES);
+        GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.faces), GL.STATIC_DRAW);
+
+        this.OBJECT_NORMAL = GL.createBuffer();
+        GL.bindBuffer(GL.ARRAY_BUFFER, this.OBJECT_NORMAL);
+        GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(this.normals), GL.STATIC_DRAW);
 
         this.childs.forEach(child => child.setup());
     }
 
     render(_MMatrix, PARENT_MATRIX) {
+        const GL = this.GL;
         this.MODEL_MATRIX = LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX);
         this.MODEL_MATRIX = LIBS.multiply(this.MODEL_MATRIX, PARENT_MATRIX);
 
-        this.GL.useProgram(this.SHADER_PROGRAM);
-        this.GL.uniformMatrix4fv(this._MMatrix, false, this.MODEL_MATRIX);
+        GL.useProgram(this.SHADER_PROGRAM);
+        GL.uniformMatrix4fv(_MMatrix, false, this.MODEL_MATRIX);
 
-        this.GL.bindBuffer(this.GL.ARRAY_BUFFER, this.OBJECT_VERTEX);
-        this.GL.vertexAttribPointer(this._position, 3, this.GL.FLOAT, false, 24, 0);
-        this.GL.vertexAttribPointer(this._color, 3, this.GL.FLOAT, false, 24, 12);
+        // posisi + warna
+        GL.bindBuffer(GL.ARRAY_BUFFER, this.OBJECT_VERTEX);
+        GL.vertexAttribPointer(this._position, 3, GL.FLOAT, false, 24, 0);
+        GL.vertexAttribPointer(this._color, 3, GL.FLOAT, false, 24, 12);
+        GL.enableVertexAttribArray(this._position);
+        GL.enableVertexAttribArray(this._color);
 
-        this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, this.OBJECT_FACES);
-        this.GL.drawElements(this.GL.TRIANGLES, this.faces.length, this.GL.UNSIGNED_SHORT, 0);
+        // normal
+        GL.bindBuffer(GL.ARRAY_BUFFER, this.OBJECT_NORMAL);
+        GL.vertexAttribPointer(this._normal, 3, GL.FLOAT, false, 0, 0);
+        GL.enableVertexAttribArray(this._normal);
+
+        // faces
+        GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.OBJECT_FACES);
+        GL.drawElements(GL.TRIANGLES, this.faces.length, GL.UNSIGNED_SHORT, 0);
 
         this.childs.forEach(child => child.render(_MMatrix, this.MODEL_MATRIX));
     }
