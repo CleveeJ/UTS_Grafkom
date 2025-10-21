@@ -1,5 +1,6 @@
 import { Bellossom } from "./Bellossom/bellosom.js";
 import { Gloom } from "./Gloom/gloom.js";
+import { Ground } from "./Ground/ground.js";
 import { Character } from "./Vileplume/Character2.js"
 
 function main() {
@@ -248,6 +249,11 @@ function main() {
     LIBS.scale(VileplumeObject.POSITION_MATRIX, [2,2,2]);
     VileplumeObject.setup();
 
+    const GroundObject = new Ground(GL, SHADER_PROGRAM, _position, _color, _normal);
+    LIBS.translateY(GroundObject.root.POSITION_MATRIX, -1);
+    LIBS.scale(GroundObject.root.POSITION_MATRIX, [5,5,5]);
+    GroundObject.setup();
+
     // ---------------- MATRIX ----------------
     let PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
     let VIEWMATRIX = LIBS.get_I4();
@@ -304,6 +310,7 @@ function main() {
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
         GloomObject.render(_Mmatrix, LIBS.get_I4());
         VileplumeObject.render(_Mmatrix, LIBS.get_I4(), time);
+        GroundObject.render(_Mmatrix, LIBS.get_I4());
 
         GL.flush();
         time += 0.02;
