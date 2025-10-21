@@ -90,21 +90,28 @@ export class Mata {
     // --- mata kecil: gambar "<" ---
     gl.useProgram(program);
 
+    const thickness = 0.02;
+
+    // Dua batang: atas dan bawah
     const verts = new Float32Array([
-      0.10,  0.08, 0.0,
-       0.00,  0.00, 0.0,
-      0.10, -0.08, 0.0,
+      // batang atas "\"
+      0.00, 0.00 + thickness, 0.0,
+      0.10, 0.08 + thickness, 0.0,
+      0.00, 0.00 - thickness, 0.0,
+      0.10, 0.08 - thickness, 0.0,
+
+      // batang bawah "/"
+      0.00, 0.00 + thickness, 0.0,
+      0.10, -0.08 + thickness, 0.0,
+      0.00, 0.00 - thickness, 0.0,
+      0.10, -0.08 - thickness, 0.0,
     ]);
 
     const colors = new Float32Array([
-      0.0, 0.0, 0.0,
-      0.0, 0.0, 0.0,
-      0.0, 0.0, 0.0,
+      // semua hitam
+      0,0,0, 0,0,0, 0,0,0, 0,0,0,
+      0,0,0, 0,0,0, 0,0,0, 0,0,0
     ]);
-
-    // const posLoc = gl.getAttribLocation(program, "position");
-    // const colLoc = gl.getAttribLocation(program, "color");
-    // const M_loc = gl.getUniformLocation(program, "Mmatrix");
 
     // buffer posisi
     const posBuffer = gl.createBuffer();
@@ -126,15 +133,15 @@ export class Mata {
     LIBS.translateY(localWink, 0.725);
     LIBS.translateZ(localWink, -0.32);
     LIBS.rotateX(localWink, LIBS.degToRad(-100));
-    LIBS.rotateY(localWink, LIBS.degToRad(-0));
     LIBS.translateX(localWink, 0.05);
 
-    // === 2️⃣ Gabungkan ke MODEL_MATRIX (yang sudah ada parent-nya)
+    // gabungkan dengan parent
     const M_cute = LIBS.multiply(localWink, this.MODEL_MATRIX);
-
     gl.uniformMatrix4fv(_MMatrix, false, M_cute);
-    gl.lineWidth(5.0);
-    gl.drawArrays(gl.LINE_STRIP, 0, 3);
+
+    // --- gambar dua batang ---
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); // atas
+    gl.drawArrays(gl.TRIANGLE_STRIP, 4, 4); // bawah
 
     // bersih
     gl.deleteBuffer(posBuffer);
