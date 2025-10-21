@@ -59,9 +59,10 @@ export class Smile {
 
     // Hitung model matrix: translate ke depan dan sedikit turun
     let transform = LIBS.get_I4();
+    LIBS.rotateX(transform, LIBS.degToRad(-90));
     LIBS.translateX(transform, 0.0);
-    LIBS.translateY(transform, -0.10);
-    LIBS.translateZ(transform, 0.78);
+    LIBS.translateY(transform, 0.76);
+    LIBS.translateZ(transform, 0.18);
 
     this.MODEL_MATRIX = LIBS.multiply(transform, PARENT_MATRIX);
 

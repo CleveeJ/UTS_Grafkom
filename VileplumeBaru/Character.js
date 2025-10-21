@@ -81,7 +81,7 @@ export class Character {
 
     // ===== BUNGA =====
     let flowerMatrix = LIBS.clone(rootMatrix);
-    LIBS.translateY(flowerMatrix, 1.1 + floatY);
+    LIBS.translateY(flowerMatrix, 1.15 + floatY);
     LIBS.rotateZ(flowerMatrix, tilt);
     this.flower.render(_MMatrix, flowerMatrix, time);
 
