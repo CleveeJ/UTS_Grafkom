@@ -2,6 +2,7 @@ import { Ellipsoid } from "./Objects/Ellipsoid.js";
 import { Capsule } from "./Objects/Capsule.js";
 import { Leaf } from "./Objects/Leaf.js";
 import { Toroid } from "./Objects/Toroid.js";
+import { bSplineMulut } from "./Objects/bSplineMulut.js";
 
 export class Bellossom{
     root = null;
@@ -10,9 +11,29 @@ export class Bellossom{
 
         //Kepala, Badan, Tangan
         var Head = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 1.7, 1.7, 1.7, 20, 20, [0.7686, 0.8588, 0.6118]);
-        var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 1.2, 0.5, 1.2, 2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.8, 0.2, 0.6118]);
-        var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.5, 0.6, 0.6118]);
+        var Body = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 1.2, 0.5, 1.2, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
+        var Right_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
+        var Left_Hand = new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.3, 0.3, 0.3, 2, 20, 10, [0.7686, 0.8588, 0.6118]);
+        const controlPointsSmile = [
+            -0.35, -0.02,   // kiri luar sedikit turun
+            -0.2, -0.06,    // kiri bawah
+            0.0,  -0.20,     // tengah atas (puncak senyum)
+            0.2, -0.06,     // kanan bawah
+            0.35, -0.02     // kanan luar
+        ];
+
+        const Mouth = new bSplineMulut(
+            GL,
+            SHADER_PROGRAM,
+            _position,
+            _color,
+            _normal,
+            controlPointsSmile,
+            0.025,   // radius (ketebalan sosis)
+            24,      // segments keliling
+            300,     // detail kurva
+            [0.7, 0.2, 0.2] // warna merah muda / bibir
+        );
 
         //Rok Luar
         var Skirt1 = [
@@ -35,25 +56,25 @@ export class Bellossom{
         ];
 
         //Bunga di sisi Kepala Kiri
-        var Flower_Torus1 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Flower_Elipsoid1 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.8, 0.2, 0.6118]);
+        var Flower_Torus1 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.9921568627450981, 0.8980392156862745, 0.5058823529411764]);
+        var Flower_Elipsoid1 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.9921568627450981, 0.8980392156862745, 0.5058823529411764]);
         var Sepals1 = [
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 1/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 3/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 5/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 1/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 3/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 5/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 7/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 9/5],
         ]
 
         //Bunga di sisi Kepala Kanan
-        var Flower_Torus2 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.3, 0.1, 0.6118]);
-        var Flower_Elipsoid2 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.8, 0.2, 0.6118]);
+        var Flower_Torus2 = new Toroid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.2, 0.2, 20, 10, [0.9921568627450981, 0.8980392156862745, 0.5058823529411764]);
+        var Flower_Elipsoid2 = new Ellipsoid(GL, SHADER_PROGRAM, _position, _color, _normal, 0.4, 0.4, 0.1, 20, 20, [0.9921568627450981, 0.8980392156862745, 0.5058823529411764]);
         var Sepals2 = [
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 1/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 3/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 5/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 7/5],
-            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.3, 0.5, 0.6]), 9/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 1/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 3/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 5/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 7/5],
+            [new Capsule(GL, SHADER_PROGRAM, _position, _color, _normal, 0.55, 0.3, 0.1, 1, 20, 10, [0.9294117647058824, 0.4549019607843137, 0.2784313725490196]), 9/5],
         ]
 
         // Mata
@@ -73,6 +94,7 @@ export class Bellossom{
         Flower_Torus1.childs.push(Flower_Elipsoid1);
         Head.childs.push(Flower_Torus2);
         Flower_Torus2.childs.push(Flower_Elipsoid2);
+        Head.childs.push(Mouth);
 
         for (let index = 0; index < Sepals1.length; index++) {
             const element = Sepals1[index];
@@ -97,6 +119,10 @@ export class Bellossom{
         // ==================== END OF HIERARKI =======================
 
         // ==================== BAGIAN POSITIONING NYA ==================
+        //Mulut
+        LIBS.translateZ(Mouth.POSITION_MATRIX, 1.7);
+        LIBS.translateY(Mouth.POSITION_MATRIX, -0.2);
+
         //Bunga sisi kiri kepala
         LIBS.translateZ(Flower_Torus1.POSITION_MATRIX, 1.7);
         var temp = LIBS.get_I4();
@@ -189,6 +215,10 @@ export class Bellossom{
             LIBS.translateY(element[0].POSITION_MATRIX, -0.5)
         }
 
+        this.Skirt1 = Skirt1;
+        this.Skirt2 = Skirt2;
+        this.Left_Hand = Left_Hand;
+        this.Right_Hand = Right_Hand;
         // ======================= END OF POSITIONING =======================
     }
 
@@ -197,6 +227,47 @@ export class Bellossom{
     }
 
     render(Mmatrix, PARENT_MATRIX){
+        const time = performance.now() * 0.002; // biar halus
+        const swingAngle = Math.sin(time) * (Math.PI / 24); // ±7.5° serempak
+
+        // Semua bagian rok luar ayun bareng
+        for (let index = 0; index < this.Skirt1.length; index++) {
+            const element = this.Skirt1[index];
+            element[0].MOVE_MATRIX = LIBS.get_I4();
+
+            LIBS.rotateZ(element[0].MOVE_MATRIX, swingAngle);
+        }
+
+        // Semua bagian rok dalam juga ayun bareng (bisa beda amplitudo biar lebih natural)
+        for (let index = 0; index < this.Skirt2.length; index++) {
+            const element = this.Skirt2[index];
+            element[0].MOVE_MATRIX = LIBS.get_I4();
+
+            LIBS.rotateZ(element[0].MOVE_MATRIX, swingAngle * 1.2); // sedikit lebih besar
+        }
+        // --- TANGAN KANAN AYUN MIRING ---
+        this.Right_Hand.MOVE_MATRIX = LIBS.get_I4();
+
+        // Rotasi kombinasi X dan Y → arah diagonal antara X dan Y
+        LIBS.rotateZ(this.Right_Hand.MOVE_MATRIX, -Math.PI / 4);
+
+        // Step 2: lakukan rotasi terhadap X
+        LIBS.rotateX(this.Right_Hand.MOVE_MATRIX, swingAngle * 1.5);
+
+        // Step 3: kembalikan orientasi semula
+        LIBS.rotateZ(this.Right_Hand.MOVE_MATRIX, Math.PI / 4);
+
+        // --- Tangan kiri (berlawanan arah biar natural) ---
+        this.Left_Hand.MOVE_MATRIX = LIBS.get_I4();
+
+        // Rotasi kombinasi X dan Y → arah diagonal antara X dan Y
+        LIBS.rotateZ(this.Left_Hand.MOVE_MATRIX, -Math.PI / 4);
+
+        // Step 2: lakukan rotasi terhadap X
+        LIBS.rotateX(this.Left_Hand.MOVE_MATRIX, -swingAngle * 1.5);
+
+        // Step 3: kembalikan orientasi semula
+        LIBS.rotateZ(this.Left_Hand.MOVE_MATRIX, Math.PI / 4);
         this.root.render(Mmatrix, PARENT_MATRIX);
     }
 }
