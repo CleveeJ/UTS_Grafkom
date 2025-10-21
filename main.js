@@ -250,7 +250,7 @@ function main() {
     VileplumeObject.setup();
 
     const GroundObject = new Ground(GL, SHADER_PROGRAM, _position, _color, _normal);
-    LIBS.translateY(GroundObject.root.POSITION_MATRIX, -1);
+    LIBS.translateY(GroundObject.root.POSITION_MATRIX, -3);
     LIBS.scale(GroundObject.root.POSITION_MATRIX, [5,5,5]);
     GroundObject.setup();
 
