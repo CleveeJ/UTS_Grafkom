@@ -148,12 +148,12 @@ export class Flower {
 
     // ====== Animasi ======
     const floatY = Math.sin(time) * 0.05; // bunga naik turun
-    const tilt = LIBS.degToRad(-5 + Math.sin(time) * -3); // rotasi ringan
+    const tilt = Math.sin(time * 0.5) * 0.1;
 
     // ====== Matriks dasar ======
     let baseMatrix = LIBS.get_I4();
-    LIBS.translate(baseMatrix, [0, floatY, 0]);
-    LIBS.rotateY(baseMatrix, tilt);
+    // LIBS.translate(baseMatrix, [0, floatY, 0]);
+    // LIBS.rotateY(baseMatrix, tilt);
     // LIBS.translateY(baseMatrix, floatY);
     // LIBS.rotateY(baseMatrix, tilt);
     // LIBS.scaleX(baseMatrix, scale);
@@ -163,26 +163,26 @@ export class Flower {
 
     // ====== Gambar bagian tengah bunga ======
     let Mouter = LIBS.get_I4();
-    // LIBS.translateY(Mouter, -1.05);
-    // LIBS.translateZ(Mouter, -0.02);
-    // LIBS.rotateY(Mouter, floatY);
+    LIBS.translateY(Mouter, -1.05);
+    LIBS.translateZ(Mouter, -0.02);
+    LIBS.rotateY(Mouter, floatY);
     this.outerTorus.render(_MMatrix, this.MODEL_MATRIX);
 
-    // let Minner = LIBS.get_I4();
-    // LIBS.translateY(Minner, -1.05);
-    // LIBS.rotateY(Minner, floatY);
-    // this.innerTorus.render(_MMatrix, this.MODEL_MATRIX);
+    let Minner = LIBS.get_I4();
+    LIBS.translateY(Minner, -1.05);
+    LIBS.rotateY(Minner, floatY);
+    this.innerTorus.render(_MMatrix, this.MODEL_MATRIX);
 
-    // let Mdisk = LIBS.get_I4();
-    // LIBS.translateY(Mdisk, -1.05);
-    // LIBS.translateZ(Mdisk, -0.02);
-    // LIBS.rotateY(Mdisk, floatY);
-    // this.diskBottom.render(_MMatrix, this.MODEL_MATRIX);
+    let Mdisk = LIBS.get_I4();
+    LIBS.translateY(Mdisk, -1.05);
+    LIBS.translateZ(Mdisk, -0.02);
+    LIBS.rotateY(Mdisk, floatY);
+    this.diskBottom.render(_MMatrix, this.MODEL_MATRIX);
 
     // ====== Kelopak ======
     const PETAL_COUNT = 5;
     const PETAL_RADIUS = 0.8;
-    const PETAL_TILT = LIBS.degToRad(-5 + Math.sin(time) * -3);
+    const PETAL_TILT = LIBS.degToRad(5 + Math.sin(time) * -6);
     const PETAL_Y_OFFSET = -1.02 + floatY;
     const PETAL_Z_FLAT = -0.11;
 

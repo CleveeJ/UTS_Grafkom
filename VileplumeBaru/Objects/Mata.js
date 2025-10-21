@@ -26,12 +26,12 @@ export class Mata {
     const leftInner = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, 0.04, 40, [1.0, 1.0, 1.0, 1.0]);
 
     [leftOuter, leftMiddle, leftInner].forEach((part, i) => {
-      const y = 0.77 + i * 0.01;
+      const y = 0.725 + i * 0.01;
       const z = -0.32 + i * 0.005;
       LIBS.translateX(part.MOVE_MATRIX, -0.25);
       LIBS.translateY(part.MOVE_MATRIX, y);
       LIBS.translateZ(part.MOVE_MATRIX, z);
-      LIBS.rotateX(part.MOVE_MATRIX, LIBS.degToRad(-95));
+      LIBS.rotateX(part.MOVE_MATRIX, LIBS.degToRad(-100));
       LIBS.rotateY(part.MOVE_MATRIX, LIBS.degToRad(10));
       LIBS.rotateZ(part.MOVE_MATRIX, LIBS.degToRad(-5));
     });
@@ -43,12 +43,12 @@ export class Mata {
 
     this.rightEyeParts = [rightOuter, rightMiddle, rightInner];
     this.rightEyeParts.forEach((part, i) => {
-      const y = 0.77 + i * 0.01;
+      const y = 0.725 + i * 0.01;
       const z = -0.32 + i * 0.005;
       LIBS.translateX(part.MOVE_MATRIX, 0.25);
       LIBS.translateY(part.MOVE_MATRIX, y);
       LIBS.translateZ(part.MOVE_MATRIX, z);
-      LIBS.rotateX(part.MOVE_MATRIX, LIBS.degToRad(-95));
+      LIBS.rotateX(part.MOVE_MATRIX, LIBS.degToRad(-100));
       LIBS.rotateY(part.MOVE_MATRIX, LIBS.degToRad(-10));
       LIBS.rotateZ(part.MOVE_MATRIX, LIBS.degToRad(5));
     });
@@ -124,7 +124,7 @@ export class Mata {
     const M_cute = this.MODEL_MATRIX.slice();
     LIBS.translateX(M_cute, 0.18);
     LIBS.translateY(M_cute, 0.30);
-    LIBS.translateZ(M_cute, 0.74);
+    LIBS.translateZ(M_cute, 0.71);
     LIBS.rotateX(M_cute, LIBS.degToRad(-90));
     LIBS.rotateY(M_cute, LIBS.degToRad(-10));
     // LIBS.rotateZ(M_cute, LIBS.degToRad(-30));

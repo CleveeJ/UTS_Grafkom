@@ -65,7 +65,7 @@ export class Character {
 
     // ===== Hitung model matrix karakter =====
     this.MODEL_MATRIX = LIBS.get_I4();
-    LIBS.translateY(this.MODEL_MATRIX, floatY);
+    // LIBS.translateY(this.MODEL_MATRIX, floatY);
     LIBS.translateZ(this.MODEL_MATRIX, -1.25);
     LIBS.rotateX(this.MODEL_MATRIX, LIBS.degToRad(90));
     const rootMatrix = LIBS.multiply(this.MODEL_MATRIX, PARENT_MATRIX);
@@ -82,7 +82,7 @@ export class Character {
     // ===== BUNGA =====
     let flowerMatrix = LIBS.clone(rootMatrix);
     LIBS.translateY(flowerMatrix, 1.15 + floatY);
-    LIBS.rotateZ(flowerMatrix, tilt);
+    // LIBS.rotateZ(flowerMatrix, tilt);
     this.flower.render(_MMatrix, flowerMatrix, time);
 
     // ===== TANGAN KIRI =====
