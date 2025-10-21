@@ -182,7 +182,7 @@ export class Flower {
     // ====== Kelopak ======
     const PETAL_COUNT = 5;
     const PETAL_RADIUS = 0.8;
-    const PETAL_TILT = LIBS.degToRad(5 + Math.sin(time) * -6);
+    const PETAL_TILT = LIBS.degToRad(5 + Math.sin(time) * -3);
     const PETAL_Y_OFFSET = -1.02 + floatY;
     const PETAL_Z_FLAT = -0.11;
 
@@ -197,16 +197,17 @@ export class Flower {
       LIBS.translate(M, [0.0, PETAL_Y_OFFSET, PETAL_Z_FLAT]);
       LIBS.rotateX(M, Math.sin(time + i) * 0.1);
       LIBS.rotateZ(M, ang);
-      LIBS.rotateX(M, LIBS.degToRad(-90));  
+      LIBS.rotateZ(M, LIBS.degToRad(-90));  
       LIBS.translate(M, [PETAL_RADIUS, 0.0, PETAL_Z_FLAT]);
       LIBS.rotateY(M, PETAL_TILT);
 
       // --- pusatkan tepat di bawah torus ---
-      LIBS.translateY(M, 2.05);
-      LIBS.translateX(M, 0.1);
-      LIBS.translateZ(M, -1.05);
+      LIBS.translateY(M, 1.1);
+      // LIBS.translateX(M, 0);
+      LIBS.translateZ(M, 0.3);
       
-      for (let a = 0; a <= 2; a++) {
+      M = LIBS.multiply(M, this.MODEL_MATRIX);
+      for (let a = 0; a <= 1; a++) {
         let layer = LIBS.clone(M);
         LIBS.translateY(layer, -a * 0.05);        
         this.petalBottom.render(_MMatrix, layer);

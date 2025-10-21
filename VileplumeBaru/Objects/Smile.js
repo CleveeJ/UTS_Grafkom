@@ -61,8 +61,8 @@ export class Smile {
     let transform = LIBS.get_I4();
     LIBS.rotateX(transform, LIBS.degToRad(-90));
     LIBS.translateX(transform, 0.0);
-    LIBS.translateY(transform, 0.78);
-    LIBS.translateZ(transform, 0.18);
+    LIBS.translateY(transform, 0.79);
+    LIBS.translateZ(transform, 0.12);
 
     this.MODEL_MATRIX = LIBS.multiply(transform, PARENT_MATRIX);
 
