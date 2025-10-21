@@ -18,7 +18,7 @@ export class Flower {
 
   childs = [];
 
-  constructor(GL, SHADER_PROGRAM, _position, _color) {
+  constructor(GL, SHADER_PROGRAM, _position, _color, _normal) {
     this.GL = GL;
     this.SHADER_PROGRAM = SHADER_PROGRAM;
     this._position = _position;
@@ -36,6 +36,7 @@ export class Flower {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.4,
       0.1,
       40,
@@ -47,6 +48,7 @@ export class Flower {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.33,
       0.05,
       40,
@@ -58,6 +60,7 @@ export class Flower {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.3,
       60,
       brown
@@ -69,6 +72,7 @@ export class Flower {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.9,
       0.65,
       0.12,
@@ -80,6 +84,7 @@ export class Flower {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.9,
       0.65,
       0.12,
@@ -91,6 +96,7 @@ export class Flower {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.9,
       0.65,
       0.12,
@@ -111,6 +117,7 @@ export class Flower {
           SHADER_PROGRAM,
           _position,
           _color,
+          _normal,
           radius,
           20,
           white

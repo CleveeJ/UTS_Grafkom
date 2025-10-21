@@ -14,7 +14,7 @@ export class Rambut {
 
   childs = [];
 
-  constructor(GL, SHADER_PROGRAM, _position, _color) {
+  constructor(GL, SHADER_PROGRAM, _position, _color, _normal) {
     this.GL = GL;
     this.SHADER_PROGRAM = SHADER_PROGRAM;
     this._position = _position;
@@ -27,6 +27,7 @@ export class Rambut {
         SHADER_PROGRAM,
         _position,
         _color,
+        _normal,
         0.25, // radiusX
         0.2,  // radiusY
         0.25, // radiusZ

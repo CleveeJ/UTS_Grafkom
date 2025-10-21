@@ -1,12 +1,13 @@
 import { Ellipsoid } from "./Ellipsoid.js";
 export class Body {
-  constructor(GL, SHADER_PROGRAM, _position, _color) {
+  constructor(GL, SHADER_PROGRAM, _position, _color, _normal) {
     // Buat badan utama (ellipsoid)
     this.mesh = new Ellipsoid(
       GL,
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.9, // rx
       1.0, // ry
       0.8, // rz

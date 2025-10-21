@@ -20,17 +20,17 @@ export class Character {
 
   childs = [];
 
-  constructor(GL, SHADER_PROGRAM, _position, _color) {
+  constructor(GL, SHADER_PROGRAM, _position, _color, _normal) {
     this.GL = GL;
     this.SHADER_PROGRAM = SHADER_PROGRAM;
     this._position = _position;
     this._color = _color;
 
     // ====== Komponen utama karakter ======
-    this.body = new Body(GL, SHADER_PROGRAM, _position, _color);
-    this.flower = new Flower(GL, SHADER_PROGRAM, _position, _color);
-    this.mata = new Mata(GL, SHADER_PROGRAM, _position, _color);
-    this.senyum = new Smile(GL, SHADER_PROGRAM, _position, _color);
+    this.body = new Body(GL, SHADER_PROGRAM, _position, _color, _normal);
+    this.flower = new Flower(GL, SHADER_PROGRAM, _position, _color, _normal);
+    this.mata = new Mata(GL, SHADER_PROGRAM, _position, _color, _normal);
+    this.senyum = new Smile(GL, SHADER_PROGRAM, _position, _color, _normal);
 
     const limbColor = [0.3, 0.4, 0.9]; // biru lembut
     this.handLeft = new Hand(
@@ -38,6 +38,7 @@ export class Character {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.12,
       0.6,
       limbColor
@@ -47,6 +48,7 @@ export class Character {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.12,
       0.6,
       limbColor
@@ -56,6 +58,7 @@ export class Character {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.12,
       0.8,
       limbColor
@@ -65,6 +68,7 @@ export class Character {
       SHADER_PROGRAM,
       _position,
       _color,
+      _normal,
       0.12,
       0.8,
       limbColor

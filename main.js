@@ -1,5 +1,6 @@
 import { Bellossom } from "./Bellossom/bellosom.js";
 import { Gloom } from "./Gloom/gloom.js";
+import { Character } from "./VileplumeBaru/Character.js"
 
 function main() {
     const CANVAS = document.getElementById("mycanvas");
@@ -123,12 +124,15 @@ function main() {
 
     // ---------------- OBJECT ----------------
     const BellossomObject = new Bellossom(GL, SHADER_PROGRAM, _position, _color, _normal);
-    LIBS.translateX(BellossomObject.root.POSITION_MATRIX, 3);
+    LIBS.translateX(BellossomObject.root.POSITION_MATRIX, 5);
     BellossomObject.setup();
 
     const GloomObject = new Gloom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, _normal);
-    LIBS.translateX(GloomObject.root.POSITION_MATRIX, -3)
+    LIBS.translateX(GloomObject.root.POSITION_MATRIX, -5);
     GloomObject.setup();
+
+    const VileplumeObject = new Character(GL, SHADER_PROGRAM, _position, _color, _normal);
+    VileplumeObject.setup();
 
     // ---------------- MATRIX ----------------
     let PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
@@ -147,6 +151,7 @@ function main() {
     GL.uniform3fv(_ambientColor, [0.1, 0.1, 0.1]);
 
     // ---------------- ANIMATE ----------------
+    let time = 0;
     function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
@@ -168,8 +173,10 @@ function main() {
 
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
         GloomObject.render(_Mmatrix, LIBS.get_I4());
+        VileplumeObject.render(_Mmatrix, LIBS.get_I4(), time);
 
         GL.flush();
+        time += 0.02;
         requestAnimationFrame(animate);
     }
 

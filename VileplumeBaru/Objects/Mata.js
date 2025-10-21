@@ -14,16 +14,16 @@ export class Mata {
   childs = [];
   rightEyeParts = [];
 
-  constructor(GL, SHADER_PROGRAM, _position, _color) {
+  constructor(GL, SHADER_PROGRAM, _position, _color, _normal) {
     this.GL = GL;
     this.SHADER_PROGRAM = SHADER_PROGRAM;
     this._position = _position;
     this._color = _color;
 
     // === MATA KIRI ===
-    const leftOuter = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, 0.1, 40, [0.0, 0.0, 0.0, 1.0]);
-    const leftMiddle = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, 0.08, 40, [0.8, 0.0, 0.0, 1.0]);
-    const leftInner = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, 0.04, 40, [1.0, 1.0, 1.0, 1.0]);
+    const leftOuter = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, _normal, 0.1, 40, [0.0, 0.0, 0.0, 1.0]);
+    const leftMiddle = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, _normal, 0.08, 40, [0.8, 0.0, 0.0, 1.0]);
+    const leftInner = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, _normal, 0.04, 40, [1.0, 1.0, 1.0, 1.0]);
 
     [leftOuter, leftMiddle, leftInner].forEach((part, i) => {
       const y = 0.725 + i * 0.01;
@@ -37,9 +37,9 @@ export class Mata {
     });
 
     // === MATA KANAN ===
-    const rightOuter = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, 0.1, 40, [0.0, 0.0, 0.0, 1.0]);
-    const rightMiddle = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, 0.08, 40, [0.8, 0.0, 0.0, 1.0]);
-    const rightInner = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, 0.04, 40, [1.0, 1.0, 1.0, 1.0]);
+    const rightOuter = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, _normal, 0.1, 40, [0.0, 0.0, 0.0, 1.0]);
+    const rightMiddle = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, _normal, 0.08, 40, [0.8, 0.0, 0.0, 1.0]);
+    const rightInner = new BezierCircle(GL, SHADER_PROGRAM, _position, _color, _normal, 0.04, 40, [1.0, 1.0, 1.0, 1.0]);
 
     this.rightEyeParts = [rightOuter, rightMiddle, rightInner];
     this.rightEyeParts.forEach((part, i) => {
