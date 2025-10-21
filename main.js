@@ -1,6 +1,6 @@
 import { Bellossom } from "./Bellossom/bellosom.js";
 import { Gloom } from "./Gloom/gloom.js";
-import { Character } from "./VileplumeBaru/Character.js"
+import { Character } from "./Vileplume/Character.js"
 
 function main() {
     const CANVAS = document.getElementById("mycanvas");
