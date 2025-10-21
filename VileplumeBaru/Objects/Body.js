@@ -14,6 +14,8 @@ export class Body {
       40,  // slices
       [0.4, 0.5, 0.9] // warna badan
     );
+    
+    LIBS.rotateX(this.mesh.POSITION_MATRIX, LIBS.degToRad(90));
   }
 
   setup() {

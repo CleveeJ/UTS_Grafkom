@@ -34,7 +34,7 @@ export class FootLeft {
     this._position = _position;
     this._color = _color;
 
-    // ===== Komponen =====
+    // ===== Komponen utama =====
     const cylinder = new Cylinder(
       GL,
       SHADER_PROGRAM,
@@ -46,6 +46,7 @@ export class FootLeft {
       32,
       colorValue
     );
+    this.cylinder = cylinder; // ✅ Simpan agar bisa diakses di bawah
 
     const top = new Ellipsoid(
       GL,
@@ -78,31 +79,38 @@ export class FootLeft {
       SHADER_PROGRAM,
       _position,
       _color,
-      radius * 0.8,
-      radius * 0.8,
-      length * 0.5,
+      radius,
+      radius,
+      length * 0.6,
       32,
       colorValue
     );
 
     // ===== Transformasi Hierarkis =====
+
     // batang utama (paha)
-    LIBS.translateZ(cylinder.MOVE_MATRIX, -0.25);
-    LIBS.rotateY(cylinder.MOVE_MATRIX, LIBS.degToRad(-20));
+    LIBS.translateY(cylinder.MOVE_MATRIX, -0.25);
+    LIBS.rotateY(cylinder.MOVE_MATRIX, LIBS.degToRad(-10));
 
     // ujung atas (pinggul)
-    LIBS.translateZ(top.MOVE_MATRIX, length * 0.3);
+    LIBS.translateZ(top.MOVE_MATRIX, cylinder.height/2);
+    LIBS.translateY(top.MOVE_MATRIX, -cylinder.height / 2);
+    LIBS.translateX(top.MOVE_MATRIX, -0.05);
 
     // ujung bawah (lutut)
-    LIBS.translateZ(bottom.MOVE_MATRIX, -length * 0.3);
+    LIBS.translateZ(bottom.MOVE_MATRIX, cylinder.height - 0.13);
+    LIBS.translateX(bottom.MOVE_MATRIX, -0.20);
+    LIBS.translateY(bottom.MOVE_MATRIX, cylinder.height/2 + 0.02);
 
-    // telapak kaki
-    LIBS.translateZ(foot.MOVE_MATRIX, -length * 0.55);
-    LIBS.rotateX(foot.MOVE_MATRIX, LIBS.degToRad(90));
+    // telapak kaki — agak ke depan dan miring
+    LIBS.translateZ(foot.MOVE_MATRIX, cylinder.height + 0.08);
+    LIBS.translateX(foot.MOVE_MATRIX, cylinder.height/2 - 0.375);
+    LIBS.rotateX(foot.MOVE_MATRIX, LIBS.degToRad(80)); // rebahkan ke depan
+    LIBS.rotateZ(foot.MOVE_MATRIX, LIBS.degToRad(-160));
     LIBS.translateZ(foot.MOVE_MATRIX, -0.25);
 
     // ===== Susun Hierarki =====
-    this.childs = [cylinder, top, bottom, foot];
+    this.childs = [cylinder, top, foot, bottom];
   }
 
   setup() {

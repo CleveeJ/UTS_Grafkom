@@ -32,7 +32,7 @@ export class Flower {
     const white = [1.0, 1.0, 1.0];
 
     this.outerTorus = new Toroid(GL, SHADER_PROGRAM, _position, _color, 0.4, 0.1, 40, 40, orange);
-    this.innerTorus = new Toroid(GL, SHADER_PROGRAM, _position, _color, 0.35, 0.05, 40, 40, black);
+    this.innerTorus = new Toroid(GL, SHADER_PROGRAM, _position, _color, 0.33, 0.05, 40, 40, black);
     this.diskBottom = new Disk(GL, SHADER_PROGRAM, _position, _color, 0.3, 60, brown);
 
     // ====== Kelopak ======
@@ -60,7 +60,7 @@ export class Flower {
     }
 
     // Tambahkan semua komponen ke childs
-    this.childs.push(this.outerTorus, this.innerTorus, this.diskBottom);
+    this.childs.push(this.outerTorus,this.innerTorus, this.diskBottom);
   }
 
   setup() {
@@ -135,12 +135,12 @@ export class Flower {
         const offsetZ = -z * 0.01;
         let layerMatrix = LIBS.clone(Mbottom);
         LIBS.translateZ(layerMatrix, offsetZ);
-        this.petalBottom.render(_MMatrix, layerMatrix);
+        // this.petalBottom.render(_MMatrix, layerMatrix);
       }
 
       // kelopak utama
-      this.petalTop.render(_MMatrix, M);
-      this.petalRim.render(_MMatrix, M);
+      // this.petalTop.render(_MMatrix, M);
+      // this.petalRim.render(_MMatrix, M);
 
       // bintik putih di kelopak
       const spotsArr = this.petalSpots[i];
@@ -150,7 +150,7 @@ export class Flower {
         LIBS.translateX(S, offset[0]);
         LIBS.translateY(S, offset[1]);
         LIBS.translateZ(S, offset[2]);
-        circle.render(_MMatrix, S);
+        // circle.render(_MMatrix, S);
       }
     }
 
