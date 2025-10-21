@@ -102,35 +102,37 @@ export class Mata {
       0.0, 0.0, 0.0,
     ]);
 
-    const posLoc = gl.getAttribLocation(program, "position");
-    const colLoc = gl.getAttribLocation(program, "color");
-    const M_loc = gl.getUniformLocation(program, "Mmatrix");
+    // const posLoc = gl.getAttribLocation(program, "position");
+    // const colLoc = gl.getAttribLocation(program, "color");
+    // const M_loc = gl.getUniformLocation(program, "Mmatrix");
 
     // buffer posisi
     const posBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STREAM_DRAW);
-    gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(this._position, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(this._position);
 
     // buffer warna
     const colBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STREAM_DRAW);
-    gl.vertexAttribPointer(colLoc, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(colLoc);
+    gl.vertexAttribPointer(this._color, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(this._color);
 
     // posisi "<"
-    const M_cute = this.MODEL_MATRIX.slice();
-    LIBS.translateX(M_cute, 0.18);
-    LIBS.translateY(M_cute, 0.30);
-    LIBS.translateZ(M_cute, 0.71);
-    LIBS.rotateX(M_cute, LIBS.degToRad(-90));
-    LIBS.rotateY(M_cute, LIBS.degToRad(-10));
-    // LIBS.rotateZ(M_cute, LIBS.degToRad(-30));
-    LIBS.translateX(M_cute, 0.05);
+    const localWink = LIBS.get_I4();
+    LIBS.translateX(localWink, 0.15);
+    LIBS.translateY(localWink, 0.725);
+    LIBS.translateZ(localWink, -0.32);
+    LIBS.rotateX(localWink, LIBS.degToRad(-100));
+    LIBS.rotateY(localWink, LIBS.degToRad(-0));
+    LIBS.translateX(localWink, 0.05);
 
-    gl.uniformMatrix4fv(M_loc, false, M_cute);
+    // === 2️⃣ Gabungkan ke MODEL_MATRIX (yang sudah ada parent-nya)
+    const M_cute = LIBS.multiply(localWink, this.MODEL_MATRIX);
+
+    gl.uniformMatrix4fv(_MMatrix, false, M_cute);
     gl.lineWidth(5.0);
     gl.drawArrays(gl.LINE_STRIP, 0, 3);
 

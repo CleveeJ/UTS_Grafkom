@@ -245,7 +245,7 @@ function main() {
     GloomObject.setup();
 
     const VileplumeObject = new Character(GL, SHADER_PROGRAM, _position, _color, _normal);
-    // LIBS.scale(VileplumeObject.POSITION_MATRIX, [2,2,2]);
+    LIBS.scale(VileplumeObject.POSITION_MATRIX, [2,2,2]);
     VileplumeObject.setup();
 
     // ---------------- MATRIX ----------------
