@@ -158,7 +158,7 @@ export class Flower {
     const tilt = Math.sin(time * 0.5) * 0.1;
 
     // ====== Matriks dasar ======
-    let baseMatrix = LIBS.get_I4();
+    // let baseMatrix = LIBS.get_I4();
     // LIBS.translate(baseMatrix, [0, floatY, 0]);
     // LIBS.rotateY(baseMatrix, tilt);
     // LIBS.translateY(baseMatrix, floatY);
@@ -166,7 +166,8 @@ export class Flower {
     // LIBS.scaleX(baseMatrix, scale);
     // LIBS.scaleY(baseMatrix, scale);
     // LIBS.scaleZ(baseMatrix, scale);
-    this.MODEL_MATRIX = LIBS.multiply(baseMatrix, PARENT_MATRIX);
+    this.MODEL_MATRIX = LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX);
+    this.MODEL_MATRIX = LIBS.multiply(this.MODEL_MATRIX, PARENT_MATRIX);
 
     // ====== Gambar bagian tengah bunga ======
     let Mouter = LIBS.get_I4();

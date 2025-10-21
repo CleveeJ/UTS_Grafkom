@@ -1,6 +1,6 @@
 import { Bellossom } from "./Bellossom/bellosom.js";
 import { Gloom } from "./Gloom/gloom.js";
-import { Character } from "./Vileplume/Character.js"
+import { Character } from "./Vileplume/Character2.js"
 
 function main() {
     const CANVAS = document.getElementById("mycanvas");
@@ -245,6 +245,7 @@ function main() {
     GloomObject.setup();
 
     const VileplumeObject = new Character(GL, SHADER_PROGRAM, _position, _color, _normal);
+    // LIBS.scale(VileplumeObject.POSITION_MATRIX, [2,2,2]);
     VileplumeObject.setup();
 
     // ---------------- MATRIX ----------------
