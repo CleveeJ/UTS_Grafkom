@@ -166,7 +166,7 @@ function main() {
         return tex;
     }
 
-    const skybox_texture = load_texture("skybox.png");
+    const skybox_texture = load_texture("skybox3.png");
 
     // ==========================================================
     // 🟢 MAIN SHADER UNTUK OBJEK (BELLOSSOM & GLOOM)
