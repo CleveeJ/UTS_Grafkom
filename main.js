@@ -1,4 +1,5 @@
 import { Bellossom } from "./Bellossom/bellosom.js";
+import { Cloud } from "./cloud/Cloud.js";
 import { Gloom } from "./Gloom/gloom.js";
 import { Ground } from "./Ground/ground.js";
 import { Character } from "./Vileplume/Character2.js"
@@ -259,6 +260,10 @@ function main() {
     LIBS.scale(GroundObject.root.POSITION_MATRIX, [5,5,5]);
     GroundObject.setup();
 
+    const CloudObject = new Cloud(GL, SHADER_PROGRAM, _position, _color, _normal);
+    LIBS.translateY(CloudObject.POSITION_MATRIX, 5);
+    CloudObject.setup();
+
     // ---------------- MATRIX ----------------
     let PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
     let VIEWMATRIX = LIBS.get_I4();
@@ -269,7 +274,7 @@ function main() {
 
     // cahaya
     GL.useProgram(SHADER_PROGRAM);
-    GL.uniform3fv(_lightPos, [10, 10, 0]);
+    GL.uniform3fv(_lightPos, [10, 10, 10]);
     GL.uniform3fv(_lightColor, [1, 1, 1]);
     GL.uniform3fv(_ambientColor, [0.1, 0.1, 0.1]);
 
@@ -292,11 +297,13 @@ function main() {
         }
 
         // === 1️⃣ DRAW SKYBOX ===
+        let MOVEMATRIX_SKYBOX = LIBS.get_I4();
+        LIBS.rotateY(MOVEMATRIX_SKYBOX, -Math.PI/4);
         GL.useProgram(SKYBOX_PROGRAM);
         GL.depthMask(false); // jangan tulis depth buffer
         GL.uniformMatrix4fv(sb_Pmatrix, false, PROJMATRIX);
         GL.uniformMatrix4fv(sb_Vmatrix, false, VIEWMATRIX);
-        GL.uniformMatrix4fv(sb_Mmatrix, false, MOVEMATRIX);
+        GL.uniformMatrix4fv(sb_Mmatrix, false, MOVEMATRIX_SKYBOX);
 
         GL.bindBuffer(GL.ARRAY_BUFFER, CUBE_VERTEX);
         GL.vertexAttribPointer(sb_pos, 3, GL.FLOAT, false, 4 * 5, 0);
@@ -316,6 +323,7 @@ function main() {
         GloomObject.render(_Mmatrix, LIBS.get_I4());
         VileplumeObject.render(_Mmatrix, LIBS.get_I4(), time);
         GroundObject.render(_Mmatrix, LIBS.get_I4());
+        CloudObject.render(_Mmatrix, LIBS.get_I4(), time);
 
         GL.flush();
         time += 0.02;

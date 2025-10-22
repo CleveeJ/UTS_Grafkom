@@ -64,9 +64,9 @@ export class Cloud {
         puff(0.35, 0.5, -0.2, 0.8),
       ],
       [
-        puff(-0.6, 0, 0, 0.85),
-        puff(0.6, 0, 0, 0.85),
-        puff(0, 0.4, 0, 0.75),
+        puff(-0.6, 0, 0, 1.3),
+        puff(0.6, 0, 0, 1.3),
+        puff(0, 0.4, 0, 1.3),
       ],
       [
         puff(-0.7, 0, 0),
@@ -78,10 +78,10 @@ export class Cloud {
         puff(1.2, 0.1, 0, 0.6),
       ],
       [
-        puff(-0.6, 0, 0, 0.9),
-        puff(0, 0, 0, 0.9),
-        puff(0.6, 0, 0, 0.9),
-        puff(0, 0.9, 0, 0.3),
+        puff(-0.6, 0, 0, 1.2),
+        puff(0, 0, 0, 1.2),
+        puff(0.6, 0, 0, 1.2),
+        puff(0, 0.7, 0, 1),
       ],
       [
         puff(-0.7, 0, 0),
@@ -106,7 +106,8 @@ export class Cloud {
       });
 
       const startX = -25 + i * 6 + Math.random() * 2;          // posisi awal horizontal acak
-      const baseY = 2.0 + Math.random() * 1.2;                 // variasi tinggi awan (tetap di atas)
+      const baseY = -5 + Math.random() * 10;                 // variasi tinggi awan (tetap di atas)
+      const baseZ = -13 + Math.random() * 26;                    // acak Z
       const speed = 0.05 + Math.random() * 0.4;                // kecepatan berbeda
       const amplitude = 0.05 + Math.random() * 0.15;           // kayak napas vertikal
       const frequency = 0.3 + Math.random() * 0.5;             // ritme napas berbeda
@@ -115,6 +116,7 @@ export class Cloud {
         puffs: clone,
         offsetX: startX,
         baseY,
+        baseZ, 
         speed,
         amplitude,
         frequency
@@ -146,6 +148,7 @@ export class Cloud {
       const matrix = LIBS.clone(MODEL);
       LIBS.translateX(matrix, cloud.offsetX);
       LIBS.translateY(matrix, cloud.baseY + floatY);
+      LIBS.translateZ(matrix, cloud.baseZ);
 
       cloud.puffs.forEach((p) => p.render(_MMatrix, matrix));
     }
