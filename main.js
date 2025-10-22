@@ -42,7 +42,7 @@ function main() {
     if (!GL) { alert("WebGL tidak tersedia"); return; }
 
     // ==========================================================
-    // 🟦 SKYBOX SHADER & OBJECT
+    // SKYBOX SHADER & OBJECT
     // ==========================================================
     const skyboxVertexShaderSrc = `
         attribute vec3 position;
@@ -171,7 +171,7 @@ function main() {
     const skybox_texture = load_texture("skybox3.png");
 
     // ==========================================================
-    // 🟢 MAIN SHADER UNTUK OBJEK (BELLOSSOM & GLOOM)
+    // MAIN SHADER UNTUK OBJEK (BELLOSSOM & GLOOM)
     // ==========================================================
     const vertexShaderSrc = `
         attribute vec3 position;
@@ -296,7 +296,7 @@ function main() {
             PHI += dY;
         }
 
-        // === 1️⃣ DRAW SKYBOX ===
+        // === DRAW SKYBOX ===
         let MOVEMATRIX_SKYBOX = LIBS.get_I4();
         LIBS.rotateY(MOVEMATRIX_SKYBOX, -Math.PI/4);
         GL.useProgram(SKYBOX_PROGRAM);
@@ -315,7 +315,7 @@ function main() {
         GL.drawElements(GL.TRIANGLES, cube_faces.length, GL.UNSIGNED_SHORT, 0);
         GL.depthMask(true);
 
-        // === 2️⃣ DRAW OBJECT ===
+        // === DRAW OBJECT ===
         GL.useProgram(SHADER_PROGRAM);
         GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
