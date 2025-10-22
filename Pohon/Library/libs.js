@@ -90,14 +90,6 @@ var LIBS = {
         m[13] += t;
     },
 
-    translate: function (m, v) {
-        const x = v[0], y = v[1], z = v[2];
-        m[12] = m[0] * x + m[4] * y + m[8] * z + m[12];
-        m[13] = m[1] * x + m[5] * y + m[9] * z + m[13];
-        m[14] = m[2] * x + m[6] * y + m[10] * z + m[14];
-        m[15] = m[3] * x + m[7] * y + m[11] * z + m[15];
-    },
-
 
     set_position: function (m, x, y, z) {
         m[12] = x, m[13] = y, m[14] = z;
@@ -114,12 +106,6 @@ var LIBS = {
     scaleZ: function (m, t) {
         m[10] *= t;
     },
-
-    scaleAll: function (m,t) {
-        m[0] *= t;
-        m[5] *= t;
-        m[10] *= t;
-    },
     
     multiply: function (m1, m2) {
         var rm = this.get_I4();
@@ -132,10 +118,6 @@ var LIBS = {
             }
         }
         return rm;
-    },
-
-    clone: function (m) {
-        return m.slice();
     },
 
     scale: function (m, v) {
