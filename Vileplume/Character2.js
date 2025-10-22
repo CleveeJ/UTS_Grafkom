@@ -110,7 +110,7 @@ export class Character {
     LIBS.rotateX(this.MODEL_MATRIX, LIBS.degToRad(90));
 
     // Gabungkan semua level transformasi
-    let rootMatrix = LIBS.multiply(this.POSITION_MATRIX, this.MODEL_MATRIX);
+    let rootMatrix = LIBS.multiply(this.MODEL_MATRIX, this.POSITION_MATRIX);
     rootMatrix = LIBS.multiply(this.MOVE_MATRIX, rootMatrix);
     rootMatrix = LIBS.multiply(PARENT_MATRIX, rootMatrix);
 

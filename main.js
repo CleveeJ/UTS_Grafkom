@@ -239,14 +239,19 @@ function main() {
     // objek
     const BellossomObject = new Bellossom(GL, SHADER_PROGRAM, _position, _color, _normal);
     LIBS.translateX(BellossomObject.root.POSITION_MATRIX, 5);
+    LIBS.translateY(BellossomObject.root.POSITION_MATRIX, -1.62);
+    LIBS.scale(BellossomObject.root.POSITION_MATRIX, [0.4,0.4,0.4]);
     BellossomObject.setup();
 
     const GloomObject = new Gloom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, _normal);
     LIBS.translateX(GloomObject.root.POSITION_MATRIX, -5);
+    LIBS.translateY(GloomObject.root.POSITION_MATRIX, -1.4);
     GloomObject.setup();
 
     const VileplumeObject = new Character(GL, SHADER_PROGRAM, _position, _color, _normal);
-    LIBS.scale(VileplumeObject.POSITION_MATRIX, [2,2,2]);
+    LIBS.translateY(VileplumeObject.POSITION_MATRIX, -0.6);
+    LIBS.translateZ(VileplumeObject.POSITION_MATRIX, 2);
+    LIBS.scale(VileplumeObject.POSITION_MATRIX, [1.8,1.8,1.8]);
     VileplumeObject.setup();
 
     const GroundObject = new Ground(GL, SHADER_PROGRAM, _position, _color, _normal);
