@@ -117,25 +117,37 @@ export class Character {
     let angle = 0;
 
     if (isFlip) {
-      // ===== SALTO =====
       const flipProgress = localTime / cycleDuration; // 0–1
-      const ease = 0.5 - 0.5 * Math.cos(flipProgress * Math.PI); // easing halus
-      jumpPhase = ease;
+      let jumpEase;
 
-      // tinggi lompat (halus)
-      jumpY = Math.sin(ease * Math.PI) * 1.0;
+      // easing dua arah: naik halus, turun halus
+      if (flipProgress < 0.5) {
+        const t = flipProgress / 0.5;
+        jumpEase = 0.5 - 0.5 * Math.cos(t * Math.PI); // naik
+      } else {
+        const t = (flipProgress - 0.5) / 0.5;
+        jumpEase = 0.5 + 0.5 * Math.cos(t * Math.PI); // turun
+      }
 
-      // rotasi dimulai setelah 40% dan selesai sebelum mendarat
-      const spinStart = 0.4, spinEnd = 0.9;
+      // tinggi lompat
+      jumpY = jumpEase * 2.0;
+
+      // translasi naik-turun
+      LIBS.translateY(this.MODEL_MATRIX, jumpY);
+
+      // ===== Rotasi tetap di poros tubuh =====
+      const spinStart = 0.4, spinEnd = 1.0;
       let spinProgress = 0;
       if (flipProgress > spinStart) {
         spinProgress = Math.min((flipProgress - spinStart) / (spinEnd - spinStart), 1.0);
       }
-      angle = spinProgress * Math.PI * 2 * 0.9;
+      const angle = spinProgress * Math.PI * 2 * 0.9;
 
-      LIBS.translateY(this.MODEL_MATRIX, jumpY);
+      // pivot di tengah badan
+      LIBS.translateY(this.MODEL_MATRIX, -1.4);
       LIBS.rotateAroundAxis(this.MODEL_MATRIX, [1, 0, 0], angle);
-    } else {
+      LIBS.translateY(this.MODEL_MATRIX, 1.4);
+    }else {
       // ===== LOMPAT KECIL =====
       jumpY = Math.sin(t * 0.8) * 0.05;
       jumpPhase = (Math.sin(t * 0.8 - Math.PI / 2) + 1) / 2; // 0–1 untuk fase kaki
@@ -153,7 +165,7 @@ export class Character {
     LIBS.translateZ(this.flower.MOVE_MATRIX, -1.17 + floatY);
 
     // ===== Gerakan tangan =====
-    const speed = isFlip ? 0.0 : 0.3;
+    const speed =  0.9;
     const swing = Math.sin(t * speed) * LIBS.degToRad(12);
     const opposite = -swing;
 
