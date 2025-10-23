@@ -95,28 +95,67 @@ export class Character {
   render(_MMatrix, PARENT_MATRIX, time = 0) {
     const gl = this.GL;
 
-    // ===== Animasi dasar =====
-    const tilt = Math.sin(time * 0.5) * 0.1;
-    const floatY = Math.sin(time * 0.8) * 0.05;
-    const speed = 2.0; // kecepatan ayunan
-    const angleSwing = 0.5; // besar ayunan dalam radian (~28.6°)
-    let swing = Math.sin(time * 1.) * LIBS.degToRad(15); // ayunan ±15°
-    let opposite = -swing;
+    // ===== Tempo slow motion =====
+    const tempo = 0.8;
+    const t = time * tempo;
 
-    // ===== Hitung model matrix karakter =====
+    // ===== Siklus animasi =====
+    const cycleDuration = 6.0;
+    const phase = Math.floor(t / cycleDuration) % 5;
+    const localTime = t % cycleDuration;
+    const isFlip = (phase === 2);
+
+    // ===== Model dasar karakter =====
     this.MODEL_MATRIX = LIBS.get_I4();
-    LIBS.translateY(this.MODEL_MATRIX, LIBS.degToRad(10 + Math.sin(time) * -6));
+    LIBS.translateY(this.MODEL_MATRIX, LIBS.degToRad(10 + Math.sin(t) * -6));
     LIBS.translateZ(this.MODEL_MATRIX, -1.25);
     LIBS.rotateX(this.MODEL_MATRIX, LIBS.degToRad(90));
 
-    // Gabungkan semua level transformasi
+    // ===== Kurva umum lompat =====
+    let jumpY = 0;
+    let jumpPhase = 0; // buat sinkron kaki nanti
+    let angle = 0;
+
+    if (isFlip) {
+      // ===== SALTO =====
+      const flipProgress = localTime / cycleDuration; // 0–1
+      const ease = 0.5 - 0.5 * Math.cos(flipProgress * Math.PI); // easing halus
+      jumpPhase = ease;
+
+      // tinggi lompat (halus)
+      jumpY = Math.sin(ease * Math.PI) * 1.0;
+
+      // rotasi dimulai setelah 40% dan selesai sebelum mendarat
+      const spinStart = 0.4, spinEnd = 0.9;
+      let spinProgress = 0;
+      if (flipProgress > spinStart) {
+        spinProgress = Math.min((flipProgress - spinStart) / (spinEnd - spinStart), 1.0);
+      }
+      angle = spinProgress * Math.PI * 2 * 0.9;
+
+      LIBS.translateY(this.MODEL_MATRIX, jumpY);
+      LIBS.rotateAroundAxis(this.MODEL_MATRIX, [1, 0, 0], angle);
+    } else {
+      // ===== LOMPAT KECIL =====
+      jumpY = Math.sin(t * 0.8) * 0.05;
+      jumpPhase = (Math.sin(t * 0.8 - Math.PI / 2) + 1) / 2; // 0–1 untuk fase kaki
+      LIBS.translateY(this.MODEL_MATRIX, jumpY);
+    }
+
+    // ===== Gabungkan transformasi =====
     let rootMatrix = LIBS.multiply(this.MODEL_MATRIX, this.POSITION_MATRIX);
     rootMatrix = LIBS.multiply(this.MOVE_MATRIX, rootMatrix);
     rootMatrix = LIBS.multiply(PARENT_MATRIX, rootMatrix);
 
     // ===== BUNGA =====
+    const floatY = Math.sin(t * 0.8) * 0.05;
     this.flower.MOVE_MATRIX = LIBS.get_I4();
     LIBS.translateZ(this.flower.MOVE_MATRIX, -1.17 + floatY);
+
+    // ===== Gerakan tangan =====
+    const speed = isFlip ? 0.0 : 0.3;
+    const swing = Math.sin(t * speed) * LIBS.degToRad(12);
+    const opposite = -swing;
 
     // ===== TANGAN KIRI =====
     this.handLeft.MOVE_MATRIX = LIBS.get_I4();
@@ -138,13 +177,20 @@ export class Character {
     LIBS.translateZ(this.footLeft.MOVE_MATRIX, 1.0);
     LIBS.rotateY(this.footLeft.MOVE_MATRIX, LIBS.degToRad(10));
 
-    // kaki ikut badan tapi sedikit menahan di bawah
-    let phaseL = time * 0.8 - Math.PI / 6; // terlambat sedikit
-    let liftL = Math.sin(phaseL) * 0.1; // naik lebih pendek
-    let bendL = Math.sin(phaseL + Math.PI / 2) * LIBS.degToRad(8);
-
-    LIBS.translateZ(this.footLeft.MOVE_MATRIX, liftL);
-    LIBS.rotateX(this.footLeft.MOVE_MATRIX, bendL);
+    // kaki mengikuti fase lompat
+    if (isFlip) {
+      // saat salto: naik → bengkok → lurus di atas → bengkok lagi saat turun
+      const bend = Math.sin(jumpPhase * Math.PI) * LIBS.degToRad(20);
+      const lift = Math.sin(jumpPhase * Math.PI) * 0.3;
+      LIBS.translateZ(this.footLeft.MOVE_MATRIX, lift);
+      LIBS.rotateX(this.footLeft.MOVE_MATRIX, bend);
+    } else {
+      // saat lompat kecil: sedikit naik dan bengkok ringan
+      const bend = Math.sin(jumpPhase * Math.PI) * LIBS.degToRad(6);
+      const lift = Math.sin(jumpPhase * Math.PI) * 0.05;
+      LIBS.translateZ(this.footLeft.MOVE_MATRIX, lift);
+      LIBS.rotateX(this.footLeft.MOVE_MATRIX, bend);
+    }
 
     // ===== KAKI KANAN =====
     this.footRight.MOVE_MATRIX = LIBS.get_I4();
@@ -152,13 +198,21 @@ export class Character {
     LIBS.translateZ(this.footRight.MOVE_MATRIX, 1.0);
     LIBS.rotateY(this.footRight.MOVE_MATRIX, LIBS.degToRad(-10));
 
-    // kanan sedikit lebih lambat lagi untuk keseimbangan
-    let phaseR = time * 0.8 - Math.PI / 3;
-    let liftR = Math.sin(phaseR) * 0.1;
-    let bendR = Math.sin(phaseR + Math.PI / 2) * LIBS.degToRad(8);
+    if (isFlip) {
+      const bend = Math.sin(jumpPhase * Math.PI + Math.PI / 6) * LIBS.degToRad(20);
+      const lift = Math.sin(jumpPhase * Math.PI + Math.PI / 6) * 0.3;
+      LIBS.translateZ(this.footRight.MOVE_MATRIX, lift);
+      LIBS.rotateX(this.footRight.MOVE_MATRIX, bend);
+    } else {
+      const bend = Math.sin(jumpPhase * Math.PI + Math.PI / 4) * LIBS.degToRad(6);
+      const lift = Math.sin(jumpPhase * Math.PI + Math.PI / 4) * 0.05;
+      LIBS.translateZ(this.footRight.MOVE_MATRIX, lift);
+      LIBS.rotateX(this.footRight.MOVE_MATRIX, bend);
+    }
 
-    LIBS.translateZ(this.footRight.MOVE_MATRIX, liftR);
-    LIBS.rotateX(this.footRight.MOVE_MATRIX, bendR);
+    // ===== Render semua bagian =====
     this.childs.forEach(child => child.render(_MMatrix, rootMatrix, time));
   }
+
+
 }

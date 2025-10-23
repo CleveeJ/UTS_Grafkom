@@ -79,6 +79,38 @@ var LIBS = {
         m[9] = c * m[9] + s * mv8;
     },
 
+    rotateAroundAxis: function (m, axis, angle) {
+    // Normalisasi sumbu rotasi
+        var x = axis[0],
+            y = axis[1],
+            z = axis[2];
+        var len = Math.sqrt(x * x + y * y + z * z);
+        if (len < 0.00001) return;
+
+        x /= len;
+        y /= len;
+        z /= len;
+
+        var c = Math.cos(angle);
+        var s = Math.sin(angle);
+        var t = 1 - c;
+
+        // Buat matriks rotasi 4x4
+        var rot = [
+            t * x * x + c,     t * x * y - s * z, t * x * z + s * y, 0,
+            t * x * y + s * z, t * y * y + c,     t * y * z - s * x, 0,
+            t * x * z - s * y, t * y * z + s * x, t * z * z + c,     0,
+            0, 0, 0, 1
+        ];
+
+        // Kalikan hasilnya ke matriks yang dikirim
+        var res = this.multiply(m, rot);
+
+        // Salin hasil kembali ke m agar tetap in-place
+        for (var i = 0; i < 16; i++) m[i] = res[i];
+    },
+
+
 
     translateZ: function (m, t) {
         m[14] += t;
