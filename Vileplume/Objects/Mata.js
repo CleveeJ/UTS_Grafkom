@@ -71,19 +71,44 @@ export class Mata {
     this.childs.slice(0, 3).forEach((child) => child.render(_MMatrix, this.MODEL_MATRIX));
 
     // animasi kedip halus
-    const BLINK_SPEED = 1.5;
-    const blinkRaw = 1.0 - Math.max(0, Math.cos(time * BLINK_SPEED));
-    const easeInOut = 0.5 - 0.5 * Math.cos(Math.PI * blinkRaw);
-    const scaleY = 0.2 + 0.8 * easeInOut;
+    // const BLINK_SPEED = 1;
+    // const blinkRaw = 10 - Math.max(0, Math.sin(time * BLINK_SPEED));
+    // const easeInOut = 0.5 - 0.5 * Math.cos(Math.PI * blinkRaw);
+    // const scaleY = 0.2 + 0.8 * easeInOut;
 
-    if (scaleY > 0.45) {
+        const blinkCycle = 10; 
+        const blinkDuration = 5; 
+        const cycleTime = (time % blinkCycle); 
+
+        let blink = 0; // 0 = mata terbuka penuh, 1 = tertutup penuh
+
+        // Kalau sedang dalam fase "kedip", lakukan scaling
+        if (cycleTime < blinkDuration) {
+            // fase kedipan halus: mata menutup & membuka cepat
+            const blinkProgress = cycleTime / blinkDuration; // 0 → 1
+            blink = Math.sin(blinkProgress * Math.PI);
+        }
+
+        // Hitung skala mata
+        const blinkScale = 1 - (blink * 0.3);
+
+    if (blinkScale  > 0.85) {
       // --- mata kanan normal ---
       this.rightEyeParts.forEach((part) => {
-        const animMatrix = LIBS.get_I4();
-        LIBS.scaleY(animMatrix, scaleY);
-        const finalMatrix = LIBS.multiply(animMatrix, this.MODEL_MATRIX);
-        part.render(_MMatrix, finalMatrix);
-      });
+      const animMatrix = LIBS.get_I4();
+
+      const radius = 0.1;
+      const offsetY = radius * (1 - blinkScale);
+
+      // Geser ke atas dulu (pivot ke tengah), lalu scale, lalu geser balik
+      // LIBS.translateY(animMatrix, offsetY);
+      // LIBS.scaleY(animMatrix, blinkScale);
+      LIBS.scaleZ(animMatrix, blinkScale);
+      // LIBS.translateY(animMatrix, -offsetY);
+
+      const finalMatrix = LIBS.multiply(animMatrix, this.MODEL_MATRIX);
+      part.render(_MMatrix, finalMatrix);
+    });
       return;
     }
 
