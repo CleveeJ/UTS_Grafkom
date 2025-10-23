@@ -279,8 +279,12 @@ function main() {
     GL.uniform3fv(_ambientColor, [0.1, 0.1, 0.1]);
 
     // ---------------- ANIMATE ----------------
-    let time = 0;
-    function animate() {
+    let globalTime = 0.0;
+    let lastTime = 0;
+    function animate(time) {
+        const deltaTime = (time - lastTime) / 1000; // dalam detik
+        lastTime = time;
+        globalTime += deltaTime;
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 
@@ -321,16 +325,16 @@ function main() {
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
         GloomObject.render(_Mmatrix, LIBS.get_I4());
-        VileplumeObject.render(_Mmatrix, LIBS.get_I4(), time);
+        VileplumeObject.render(_Mmatrix, LIBS.get_I4(), globalTime * 4);
         GroundObject.render(_Mmatrix, LIBS.get_I4());
-        CloudObject.render(_Mmatrix, LIBS.get_I4(), time);
+        CloudObject.render(_Mmatrix, LIBS.get_I4(), globalTime * 4);
 
         GL.flush();
         time += 0.02;
         requestAnimationFrame(animate);
     }
 
-    animate();
+    animate(0);
 }
 
 window.addEventListener('load', main);
