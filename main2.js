@@ -241,7 +241,7 @@ function main() {
     BellossomObject.setup();
 
     const GloomObject = new Gloom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, _normal);
-    LIBS.translateZ(GloomObject.root.POSITION_MATRIX, 3);
+    // LIBS.translateZ(GloomObject.root.POSITION_MATRIX, 3);
     LIBS.translateX(GloomObject.root.POSITION_MATRIX, -5);
     LIBS.translateY(GloomObject.root.POSITION_MATRIX, -1.4);
     GloomObject.setup();
@@ -368,7 +368,7 @@ function main() {
     
 
     
-    let gloomZ = -3; 
+    let gloomZ = 0; 
     let gloomState = 'movingForward'; 
     let gloomRotation = 0; 
     const gloomSpeed = 2; 
@@ -491,8 +491,8 @@ function main() {
         if (gloomState === 'movingForward') {
             // gerak maju
             gloomZ += gloomSpeed * deltaTime;
-            if (gloomZ >= 4) {
-                gloomZ = 4; 
+            if (gloomZ >= 5) {
+                gloomZ = 5; 
                 gloomState = 'somersaulting'; 
                 gloomRotation = 0; 
             }
@@ -507,8 +507,8 @@ function main() {
             
             gloomZ -= gloomSpeed * deltaTime;
             
-            if (gloomZ <= -4) { 
-                gloomZ = -4; 
+            if (gloomZ <= 0) { 
+                gloomZ = 0; 
                 gloomState = 'movingForward'; 
             }
         }
