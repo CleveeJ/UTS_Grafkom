@@ -134,5 +134,29 @@ var LIBS = {
         m[0] *= sx; m[1] *= sx; m[2] *= sx;
         m[4] *= sy; m[5] *= sy; m[6] *= sy;
         m[8] *= sz; m[9] *= sz; m[10] *= sz;
-    }
+    }, 
+    rotateArbitraryAxis: function (m, axis, angle) {
+        var x = axis[0], y = axis[1], z = axis[2];
+        var len = Math.sqrt(x * x + y * y + z * z);
+        if (len === 0) return;
+
+        x /= len; y /= len; z /= len;
+
+        var c = Math.cos(angle);
+        var s = Math.sin(angle);
+        var t = 1 - c;
+
+        var R = [
+            t * x * x + c,     t * x * y - s * z, t * x * z + s * y, 0,
+            t * x * y + s * z, t * y * y + c,     t * y * z - s * x, 0,
+            t * x * z - s * y, t * y * z + s * x, t * z * z + c,     0,
+            0, 0, 0, 1
+        ];
+
+        var result = LIBS.multiply(m, R);
+
+        for (var i = 0; i < 16; i++) {
+            m[i] = result[i];
+        }
+    },
 };

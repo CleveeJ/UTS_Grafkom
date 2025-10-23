@@ -194,7 +194,7 @@ export class Gloom {
         LIBS.rotateX(this.handKanan.MOVE_MATRIX, -swing / 2);
         LIBS.rotateX(this.handKiri.MOVE_MATRIX, swing / 2);
 
-        const bodyBounce = Math.abs(Math.sin(this.walk)) * 0.05;
+        const bodyBounce = Math.abs(Math.sin(this.walk)) * 0.1;
         LIBS.translateY(this.badan.MOVE_MATRIX, bodyBounce);
 
         const hairScale = 1 + Math.sin(this.walk) * 0.04;

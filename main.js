@@ -263,6 +263,9 @@ function main() {
 
     // ---------------- ANIMATE ----------------
     let time = 0;
+    let gloomZ = 0;
+    let gloomDirection = 1;
+    const gloomSpeed = 0.03;
     function animate() {
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
@@ -296,12 +299,20 @@ function main() {
         GL.drawElements(GL.TRIANGLES, cube_faces.length, GL.UNSIGNED_SHORT, 0);
         GL.depthMask(true);
 
-        // === 2️⃣ DRAW OBJECT ===
+        // Gloom maju-mundur di sumbu Z
+        if (gloomZ > 3) gloomDirection = -1;
+        if (gloomZ < -3) gloomDirection = 1;
+        gloomZ += gloomDirection * gloomSpeed;
+
+        const gloomMoveMatrix = LIBS.get_I4();
+        LIBS.translateZ(gloomMoveMatrix, gloomZ);
+
+        // === DRAW OBJECT ===
         GL.useProgram(SHADER_PROGRAM);
         GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
         GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
-        GloomObject.render(_Mmatrix, LIBS.get_I4());
+        GloomObject.render(_Mmatrix, gloomMoveMatrix);
         VileplumeObject.render(_Mmatrix, LIBS.get_I4(), time);
 
         GL.flush();
