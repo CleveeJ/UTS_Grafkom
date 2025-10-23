@@ -126,7 +126,7 @@ export class Capsule {
     }
 
     render(_MMatrix, PARENT_MATRIX) {
-        this.MODEL_MATRIX = LIBS.multiply(this.MOVE_MATRIX, this.POSITION_MATRIX);
+        this.MODEL_MATRIX = LIBS.multiply(this.POSITION_MATRIX, this.MOVE_MATRIX);
         this.MODEL_MATRIX = LIBS.multiply(this.MODEL_MATRIX, PARENT_MATRIX);
 
         this.GL.useProgram(this.SHADER_PROGRAM);

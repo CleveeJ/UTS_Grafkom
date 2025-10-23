@@ -256,7 +256,9 @@ export class Bellossom{
         LIBS.rotateZ(this.Right_Hand.MOVE_MATRIX, -Math.PI / 4);
 
         // Step 2: lakukan rotasi terhadap X
-        LIBS.rotateX(this.Right_Hand.MOVE_MATRIX, swingAngle * 1.5);
+        let temp = LIBS.get_I4();
+        LIBS.rotateX(temp, swingAngle * 1.5);
+        this.Right_Hand.MOVE_MATRIX = LIBS.multiply(this.Right_Hand.MOVE_MATRIX, temp);
 
         // Step 3: kembalikan orientasi semula
         LIBS.rotateZ(this.Right_Hand.MOVE_MATRIX, Math.PI / 4);
@@ -268,7 +270,9 @@ export class Bellossom{
         LIBS.rotateZ(this.Left_Hand.MOVE_MATRIX, -Math.PI / 4);
 
         // Step 2: lakukan rotasi terhadap X
-        LIBS.rotateX(this.Left_Hand.MOVE_MATRIX, -swingAngle * 1.5);
+        temp = LIBS.get_I4();
+        LIBS.rotateX(temp, -swingAngle * 1.5);
+        this.Left_Hand.MOVE_MATRIX = LIBS.multiply(this.Left_Hand.MOVE_MATRIX, temp);
 
         // Step 3: kembalikan orientasi semula
         LIBS.rotateZ(this.Left_Hand.MOVE_MATRIX, Math.PI / 4);
