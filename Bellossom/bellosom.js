@@ -229,6 +229,10 @@ export class Bellossom{
     render(Mmatrix, PARENT_MATRIX){
         const time = performance.now() * 0.002; // biar halus
         const swingAngle = Math.sin(time) * (Math.PI / 24); // ±7.5° serempak
+        const swayX = Math.sin(time) * 0.65;
+
+        this.root.MOVE_MATRIX = LIBS.get_I4();
+        LIBS.translateX(this.root.MOVE_MATRIX, swayX);
 
         // Semua bagian rok luar ayun bareng
         for (let index = 0; index < this.Skirt1.length; index++) {

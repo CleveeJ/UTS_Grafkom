@@ -1,6 +1,8 @@
 import { Bellossom } from "./Bellossom/bellosom.js";
+import { Cloud } from "./cloud/Cloud.js";
 import { Gloom } from "./Gloom/gloom.js";
-import { Character } from "./Vileplume/Character.js"
+import { Ground } from "./Ground/ground.js";
+import { Character } from "./Vileplume/Character2.js"
 
 function main() {
     const CANVAS = document.getElementById("mycanvas");
@@ -40,7 +42,7 @@ function main() {
     if (!GL) { alert("WebGL tidak tersedia"); return; }
 
     // ==========================================================
-    // 🟦 SKYBOX SHADER & OBJECT
+    // SKYBOX SHADER & OBJECT
     // ==========================================================
     const skyboxVertexShaderSrc = `
         attribute vec3 position;
@@ -169,7 +171,7 @@ function main() {
     const skybox_texture = load_texture("skybox3.png");
 
     // ==========================================================
-    // 🟢 MAIN SHADER UNTUK OBJEK (BELLOSSOM & GLOOM)
+    // MAIN SHADER UNTUK OBJEK (BELLOSSOM & GLOOM)
     // ==========================================================
     const vertexShaderSrc = `
         attribute vec3 position;
@@ -238,14 +240,29 @@ function main() {
     // objek
     const BellossomObject = new Bellossom(GL, SHADER_PROGRAM, _position, _color, _normal);
     LIBS.translateX(BellossomObject.root.POSITION_MATRIX, 5);
+    LIBS.translateY(BellossomObject.root.POSITION_MATRIX, -1.62);
+    LIBS.scale(BellossomObject.root.POSITION_MATRIX, [0.4,0.4,0.4]);
     BellossomObject.setup();
 
     const GloomObject = new Gloom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, _normal);
     LIBS.translateX(GloomObject.root.POSITION_MATRIX, -5);
+    LIBS.translateY(GloomObject.root.POSITION_MATRIX, -1.4);
     GloomObject.setup();
 
     const VileplumeObject = new Character(GL, SHADER_PROGRAM, _position, _color, _normal);
+    LIBS.translateY(VileplumeObject.POSITION_MATRIX, -0.6);
+    LIBS.translateZ(VileplumeObject.POSITION_MATRIX, 2);
+    LIBS.scale(VileplumeObject.POSITION_MATRIX, [1.8,1.8,1.8]);
     VileplumeObject.setup();
+
+    const GroundObject = new Ground(GL, SHADER_PROGRAM, _position, _color, _normal);
+    LIBS.translateY(GroundObject.root.POSITION_MATRIX, -3);
+    LIBS.scale(GroundObject.root.POSITION_MATRIX, [5,5,5]);
+    GroundObject.setup();
+
+    const CloudObject = new Cloud(GL, SHADER_PROGRAM, _position, _color, _normal);
+    LIBS.translateY(CloudObject.POSITION_MATRIX, 5);
+    CloudObject.setup();
 
     // ---------------- MATRIX ----------------
     let PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
@@ -257,7 +274,7 @@ function main() {
 
     // cahaya
     GL.useProgram(SHADER_PROGRAM);
-    GL.uniform3fv(_lightPos, [10, 10, 0]);
+    GL.uniform3fv(_lightPos, [10, 10, 10]);
     GL.uniform3fv(_lightColor, [1, 1, 1]);
     GL.uniform3fv(_ambientColor, [0.1, 0.1, 0.1]);
 
@@ -282,12 +299,14 @@ function main() {
             PHI += dY;
         }
 
-        // === 1️⃣ DRAW SKYBOX ===
+        // === DRAW SKYBOX ===
+        let MOVEMATRIX_SKYBOX = LIBS.get_I4();
+        LIBS.rotateY(MOVEMATRIX_SKYBOX, -Math.PI/4);
         GL.useProgram(SKYBOX_PROGRAM);
         GL.depthMask(false); // jangan tulis depth buffer
         GL.uniformMatrix4fv(sb_Pmatrix, false, PROJMATRIX);
         GL.uniformMatrix4fv(sb_Vmatrix, false, VIEWMATRIX);
-        GL.uniformMatrix4fv(sb_Mmatrix, false, MOVEMATRIX);
+        GL.uniformMatrix4fv(sb_Mmatrix, false, MOVEMATRIX_SKYBOX);
 
         GL.bindBuffer(GL.ARRAY_BUFFER, CUBE_VERTEX);
         GL.vertexAttribPointer(sb_pos, 3, GL.FLOAT, false, 4 * 5, 0);
@@ -314,6 +333,8 @@ function main() {
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
         GloomObject.render(_Mmatrix, gloomMoveMatrix);
         VileplumeObject.render(_Mmatrix, LIBS.get_I4(), time);
+        GroundObject.render(_Mmatrix, LIBS.get_I4());
+        CloudObject.render(_Mmatrix, LIBS.get_I4(), time);
 
         GL.flush();
         time += 0.02;
