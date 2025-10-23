@@ -191,9 +191,11 @@ export class Gloom {
         const swing = Math.sin(this.walk) * 0.7;
         LIBS.rotateX(this.legKiri.MOVE_MATRIX, swing);
         LIBS.rotateX(this.legKanan.MOVE_MATRIX, -swing);
-        LIBS.rotateX(this.handKanan.MOVE_MATRIX, -swing / 2);
-        LIBS.rotateX(this.handKiri.MOVE_MATRIX, swing / 2);
-
+        
+        const swinghand = Math.sin(this.walk) * 0.35;
+        LIBS.rotateX(this.handKiri.MOVE_MATRIX, swinghand);
+        LIBS.rotateX(this.handKanan.MOVE_MATRIX, -swinghand);
+        
         const bodyBounce = Math.abs(Math.sin(this.walk)) * 0.1;
         LIBS.translateY(this.badan.MOVE_MATRIX, bodyBounce);
 

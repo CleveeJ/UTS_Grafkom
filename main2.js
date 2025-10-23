@@ -329,8 +329,14 @@ function main() {
     });
     
 
+    
+    let gloomZ = -3; 
+    let gloomState = 'movingForward'; 
+    let gloomRotation = 0; 
+    const gloomSpeed = 2; 
+    const gloomRotationSpeed = Math.PI * 0.8; 
     function animate(time) {
-        const deltaTime = (time - lastTime) / 1000; // dalam detik
+        const deltaTime = (time - lastTime) / 1000; 
         lastTime = time;
         globalTime += deltaTime;
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
@@ -444,12 +450,47 @@ function main() {
         GL.drawElements(GL.TRIANGLES, cube_faces.length, GL.UNSIGNED_SHORT, 0);
         GL.depthMask(true);
 
+        if (gloomState === 'movingForward') {
+            // gerak maju
+            gloomZ += gloomSpeed * deltaTime;
+            if (gloomZ >= 4) {
+                gloomZ = 4; 
+                gloomState = 'somersaulting'; 
+                gloomRotation = 0; 
+            }
+        } else if (gloomState === 'somersaulting') {
+            // roll dpn
+            gloomRotation += gloomRotationSpeed * deltaTime;
+            if (gloomRotation >= Math.PI * 2) { 
+                gloomRotation = 0; 
+                gloomState = 'movingBackward'; 
+            }
+        } else if (gloomState === 'movingBackward') {
+            
+            gloomZ -= gloomSpeed * deltaTime;
+            
+            if (gloomZ <= -4) { 
+                gloomZ = -4; 
+                gloomState = 'movingForward'; 
+            }
+        }
+
+        const gloomMoveMatrix = LIBS.get_I4();
+        if (gloomRotation > 0) {
+            // rotasi salto diagonal pada pusat nya
+            LIBS.rotateZ(gloomMoveMatrix, -Math.PI / 15); // Miringkan sumbu
+            LIBS.rotateX(gloomMoveMatrix, -gloomRotation); // salto
+            LIBS.rotateZ(gloomMoveMatrix, Math.PI / 15); // kembali ke sumbu
+        }
+
+        LIBS.translateZ(gloomMoveMatrix, gloomZ);
+    
         // === DRAW OBJECT ===
         GL.useProgram(SHADER_PROGRAM);
         GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
         GL.uniformMatrix4fv(_Vmatrix, false, finalViewMatrix);
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
-        GloomObject.render(_Mmatrix, LIBS.get_I4());
+        GloomObject.render(_Mmatrix, gloomMoveMatrix); 
         VileplumeObject.render(_Mmatrix, LIBS.get_I4(), globalTime * 4);
         GroundObject.render(_Mmatrix, LIBS.get_I4());
         CloudObject.render(_Mmatrix, LIBS.get_I4(), globalTime * 4);
@@ -457,7 +498,6 @@ function main() {
         GL.flush();
         requestAnimationFrame(animate);
     }
-
     animate(0);
 }
 
