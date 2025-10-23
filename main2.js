@@ -9,12 +9,6 @@ function main() {
     CANVAS.width = window.innerWidth;
     CANVAS.height = window.innerHeight;
 
-    let drag = false;
-    let x_prev, y_prev;
-    let THETA = 0, PHI = 0;
-    let dX = 0, dY = 0;
-    const FRICTION = 0.15;
-
     // ---------------- MOUSE EVENTS ----------------
     CANVAS.addEventListener("mousedown", (e) => {
         drag = true;
@@ -279,22 +273,68 @@ function main() {
     GL.uniform3fv(_ambientColor, [0.1, 0.1, 0.1]);
 
     // ---------------- ANIMATE ----------------
+    PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
+    // VIEWMATRIX HANYA menyimpan POSISI awal (Translation)
+    VIEWMATRIX = LIBS.get_I4();
+    LIBS.translateZ(VIEWMATRIX, -30);
+    var drag = false;
+    var x_prev, y_prev;
+    var dX = 0, dY = 0, THETA = 0, PHI = 0;
+    var FRICTION = 0.05;
+
+    CANVAS.addEventListener("mousedown", function(e) {
+        drag = true;
+        x_prev = e.pageX;
+        y_prev = e.pageY;
+        e.preventDefault();
+    });
+    CANVAS.addEventListener("mouseup", () => drag = false);
+    CANVAS.addEventListener("mouseout", () => drag = false);
+    CANVAS.addEventListener("mousemove", function(e) {
+        if (!drag) return;
+        dX = (e.pageX - x_prev) * 2 * Math.PI / CANVAS.width;
+        dY = (e.pageY - y_prev) * 2 * Math.PI / CANVAS.height;
+        THETA += dX;
+        PHI += dY;
+        x_prev = e.pageX;
+        y_prev = e.pageY;
+        e.preventDefault();
+    });
+
+    // KEYBOARD CONTROLS STATE (WASD, Spasi/Ctrl)
+    let keys = {};
+    let isWalking = false;
+
+    // Global state
     let globalTime = 0.0;
     let lastTime = 0;
-    let gloomZ = 0;
-    let gloomDirection = 1;
-    const gloomSpeed = 0.03;
+    const cameraSpeed = 20.0; // Kecepatan pergerakan (unit per detik)
+
+    document.addEventListener('keydown', (event) => {
+        const key = event.key.toLowerCase();
+        keys[key] = true;
+
+        if (key === 'p') {
+            isWalking = true;
+        }
+    });
+
+    document.addEventListener('keyup', (event) => {
+        const key = event.key.toLowerCase();
+        keys[key] = false;
+
+        if (key === 'p') {
+            isWalking = false;
+        }
+    });
+    
+
     function animate(time) {
         const deltaTime = (time - lastTime) / 1000; // dalam detik
         lastTime = time;
         globalTime += deltaTime;
         GL.viewport(0, 0, CANVAS.width, CANVAS.height);
         GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
-
-        VIEWMATRIX = LIBS.get_I4();
-        LIBS.translateZ(VIEWMATRIX, -30);
-        LIBS.rotateY(VIEWMATRIX, THETA);
-        LIBS.rotateX(VIEWMATRIX, PHI);
 
         if (!drag) {
             dX *= (1 - FRICTION);
@@ -303,13 +343,95 @@ function main() {
             PHI += dY;
         }
 
+        // Matriks Rotasi Mouse Look
+        var mouseRotationMatrix = LIBS.get_I4();
+        LIBS.rotateY(mouseRotationMatrix, THETA);
+        LIBS.rotateX(mouseRotationMatrix, PHI);
+
+        var forwardDirectionMatrix = LIBS.get_I4();
+        LIBS.rotateY(forwardDirectionMatrix, -THETA);
+        LIBS.rotateX(forwardDirectionMatrix, -PHI);
+
+        var rightDirectionMatrix = LIBS.get_I4();
+        LIBS.rotateY(rightDirectionMatrix, -THETA);
+
+        // Ambil arah pandang kamera dari rotasi mouse
+        let right   = [rightDirectionMatrix[0], rightDirectionMatrix[1], rightDirectionMatrix[2]];
+        let up      = [rightDirectionMatrix[4], rightDirectionMatrix[5], rightDirectionMatrix[6]];
+        let forward = [forwardDirectionMatrix[8], forwardDirectionMatrix[9], forwardDirectionMatrix[10]];
+
+        // Normalisasi (biar panjang = 1)
+        function normalize(v) {
+            let len = Math.hypot(v[0], v[1], v[2]);
+            return len > 0 ? [v[0]/len, v[1]/len, v[2]/len] : [0,0,0];
+        }
+        right = normalize(right);
+        up = normalize(up);
+        forward = normalize(forward);
+
+        // --- WASD & Vertical Movement ---
+        let camTranslation = LIBS.get_I4();
+
+        const dist = cameraSpeed * deltaTime;
+        
+        // Translasi pergerakan WASD (relative to camera rotation)
+        if (keys['w']) {
+            LIBS.translate(VIEWMATRIX, [
+                forward[0] * dist,
+                forward[1] * dist,
+                forward[2] * dist
+            ]);
+        }
+        if (keys['s']) {
+            LIBS.translate(VIEWMATRIX, [
+                -forward[0] * dist,
+                -forward[1] * dist,
+                -forward[2] * dist
+            ]);
+        }
+        if (keys['a']) {
+            LIBS.translate(VIEWMATRIX, [
+                right[0] * dist,
+                right[1] * dist,
+                right[2] * dist
+            ]);
+        }
+        if (keys['d']) {
+            LIBS.translate(VIEWMATRIX, [
+                -right[0] * dist,
+                -right[1] * dist,
+                -right[2] * dist
+            ]);
+        }
+
+        if (keys[' ']) { 
+            LIBS.translate(VIEWMATRIX, [
+                -up[0] * dist,
+                -up[1] * dist,
+                -up[2] * dist
+            ]); 
+        } // Naik (Space)
+        if (keys['control']) { 
+            LIBS.translate(VIEWMATRIX, [
+                up[0] * dist,
+                up[1] * dist,
+                up[2] * dist
+            ]); 
+        } // Turun (Ctrl)
+        
+        // Menerapkan pergerakan kamera (CamTranslation) pada VIEWMATRIX (Global Translation)
+        VIEWMATRIX = LIBS.multiply(VIEWMATRIX, camTranslation);
+
+        // Matriks View Final: Rotasi Mouse di kali Posisi Kamera Saat Ini
+        var finalViewMatrix = LIBS.multiply(VIEWMATRIX, mouseRotationMatrix);
+
         // === DRAW SKYBOX ===
         let MOVEMATRIX_SKYBOX = LIBS.get_I4();
         LIBS.rotateY(MOVEMATRIX_SKYBOX, -Math.PI/4);
         GL.useProgram(SKYBOX_PROGRAM);
         GL.depthMask(false); // jangan tulis depth buffer
         GL.uniformMatrix4fv(sb_Pmatrix, false, PROJMATRIX);
-        GL.uniformMatrix4fv(sb_Vmatrix, false, VIEWMATRIX);
+        GL.uniformMatrix4fv(sb_Vmatrix, false, finalViewMatrix);
         GL.uniformMatrix4fv(sb_Mmatrix, false, MOVEMATRIX_SKYBOX);
 
         GL.bindBuffer(GL.ARRAY_BUFFER, CUBE_VERTEX);
@@ -322,26 +444,17 @@ function main() {
         GL.drawElements(GL.TRIANGLES, cube_faces.length, GL.UNSIGNED_SHORT, 0);
         GL.depthMask(true);
 
-        // Gloom maju-mundur di sumbu Z
-        if (gloomZ > 3) gloomDirection = -1;
-        if (gloomZ < -3) gloomDirection = 1;
-        gloomZ += gloomDirection * gloomSpeed;
-
-        const gloomMoveMatrix = LIBS.get_I4();
-        LIBS.translateZ(gloomMoveMatrix, gloomZ);
-
         // === DRAW OBJECT ===
         GL.useProgram(SHADER_PROGRAM);
         GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
-        GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
+        GL.uniformMatrix4fv(_Vmatrix, false, finalViewMatrix);
         BellossomObject.render(_Mmatrix, LIBS.get_I4());
-        GloomObject.render(_Mmatrix, gloomMoveMatrix);
+        GloomObject.render(_Mmatrix, LIBS.get_I4());
         VileplumeObject.render(_Mmatrix, LIBS.get_I4(), globalTime * 4);
         GroundObject.render(_Mmatrix, LIBS.get_I4());
         CloudObject.render(_Mmatrix, LIBS.get_I4(), globalTime * 4);
 
         GL.flush();
-        time += 0.02;
         requestAnimationFrame(animate);
     }
 
