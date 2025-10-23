@@ -3,6 +3,7 @@ import { Cloud } from "./cloud/Cloud.js";
 import { Gloom } from "./Gloom/gloom.js";
 import { Ground } from "./Ground/ground.js";
 import { Character } from "./Vileplume/Character2.js"
+import { Pohon } from "./Pohon/pohon.js";
 
 function main() {
     const CANVAS = document.getElementById("mycanvas");
@@ -234,18 +235,20 @@ function main() {
     // objek
     const BellossomObject = new Bellossom(GL, SHADER_PROGRAM, _position, _color, _normal);
     LIBS.translateX(BellossomObject.root.POSITION_MATRIX, 5);
+    LIBS.translateZ(BellossomObject.root.POSITION_MATRIX, 3);
     LIBS.translateY(BellossomObject.root.POSITION_MATRIX, -1.62);
     LIBS.scale(BellossomObject.root.POSITION_MATRIX, [0.4,0.4,0.4]);
     BellossomObject.setup();
 
     const GloomObject = new Gloom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, _normal);
+    LIBS.translateZ(GloomObject.root.POSITION_MATRIX, 3);
     LIBS.translateX(GloomObject.root.POSITION_MATRIX, -5);
     LIBS.translateY(GloomObject.root.POSITION_MATRIX, -1.4);
     GloomObject.setup();
 
     const VileplumeObject = new Character(GL, SHADER_PROGRAM, _position, _color, _normal);
     LIBS.translateY(VileplumeObject.POSITION_MATRIX, -0.6);
-    LIBS.translateZ(VileplumeObject.POSITION_MATRIX, 2);
+    LIBS.translateZ(VileplumeObject.POSITION_MATRIX, 5);
     LIBS.scale(VileplumeObject.POSITION_MATRIX, [1.8,1.8,1.8]);
     VileplumeObject.setup();
 
@@ -255,8 +258,43 @@ function main() {
     GroundObject.setup();
 
     const CloudObject = new Cloud(GL, SHADER_PROGRAM, _position, _color, _normal);
-    LIBS.translateY(CloudObject.POSITION_MATRIX, 5);
+    LIBS.translateY(CloudObject.POSITION_MATRIX, 8);
     CloudObject.setup();
+
+    const pohonList = [];
+    const jumlahPohon = 10; // jumlah pohon yang ingin kamu buat
+    const posisi = [
+        [-10, -3], // x, z
+        [-6, -8],
+        [-3, -4],
+        [-1, -6],
+        [-0, -9],
+        [2, -2],
+        [5, -1],
+        [9, -5],
+        [3, -7],
+        [11, -3],
+    ];
+
+    for (let i = 0; i < jumlahPohon; i++) {
+        const posX = posisi[i][0];
+        const posZ = posisi[i][1];
+
+        // Skala acak antara 0.6 dan 1.4
+        const scale = 2 + Math.random() * 1.2;
+
+        // Buat objek pohon
+        const pohon = new Pohon(GL, SHADER_PROGRAM, _position, _color, _normal, scale);
+        
+        // Transformasi posisi dan skala pohon
+        LIBS.translateX(pohon.root.POSITION_MATRIX, posX);
+        LIBS.translateZ(pohon.root.POSITION_MATRIX, posZ);
+        LIBS.translateY(pohon.root.POSITION_MATRIX, -0.8); // supaya di atas ground
+        LIBS.scale(pohon.root.POSITION_MATRIX, [scale, scale, scale]);
+
+        pohon.setup();
+        pohonList.push(pohon);
+    }
 
     // ---------------- MATRIX ----------------
     let PROJMATRIX = LIBS.get_projection(40, CANVAS.width / CANVAS.height, 1, 100);
@@ -453,6 +491,9 @@ function main() {
         VileplumeObject.render(_Mmatrix, LIBS.get_I4(), globalTime * 4);
         GroundObject.render(_Mmatrix, LIBS.get_I4());
         CloudObject.render(_Mmatrix, LIBS.get_I4(), globalTime * 4);
+        for (let pohon of pohonList) {
+            pohon.render(_Mmatrix, LIBS.get_I4());
+        }
 
         GL.flush();
         requestAnimationFrame(animate);
