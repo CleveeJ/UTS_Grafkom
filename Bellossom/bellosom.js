@@ -219,6 +219,8 @@ export class Bellossom{
         this.Skirt2 = Skirt2;
         this.Left_Hand = Left_Hand;
         this.Right_Hand = Right_Hand;
+        this.LeftEye = LeftEye;
+        this.RightEye = RightEye;
         // ======================= END OF POSITIONING =======================
     }
 
@@ -276,6 +278,35 @@ export class Bellossom{
 
         // Step 3: kembalikan orientasi semula
         LIBS.rotateZ(this.Left_Hand.MOVE_MATRIX, Math.PI / 4);
+
+        
+        // === Efek Kedipan Mata dengan Jeda 2 Detik ===
+        const blinkCycle = 4.5; // total durasi satu siklus (detik)
+        const blinkDuration = 0.25; // lama kedipan (detik)
+        const cycleTime = (time % blinkCycle); // waktu di dalam siklus
+
+        let blinkFactor = 0; // 0 = mata terbuka penuh, 1 = tertutup penuh
+
+        // Kalau sedang dalam fase "kedip", lakukan scaling
+        if (cycleTime < blinkDuration) {
+            // fase kedipan halus: mata menutup & membuka cepat
+            const blinkProgress = cycleTime / blinkDuration; // 0 → 1
+            blinkFactor = Math.sin(blinkProgress * Math.PI); // naik-turun halus
+        }
+
+        // Hitung skala mata berdasarkan blinkFactor
+        const blinkScale = 1 - (blinkFactor * 0.85); // 1 = buka penuh, ~0.15 = tertutup
+
+        this.LeftEye.MOVE_MATRIX = LIBS.get_I4();
+        this.RightEye.MOVE_MATRIX = LIBS.get_I4();
+
+        // scaling kedipan pada Y dan Z bersamaan
+        LIBS.scaleY(this.LeftEye.MOVE_MATRIX, blinkScale);
+        LIBS.scaleZ(this.LeftEye.MOVE_MATRIX, blinkScale);
+
+        LIBS.scaleY(this.RightEye.MOVE_MATRIX, blinkScale);
+        LIBS.scaleZ(this.RightEye.MOVE_MATRIX, blinkScale);
+
         this.root.render(Mmatrix, PARENT_MATRIX);
     }
 }
