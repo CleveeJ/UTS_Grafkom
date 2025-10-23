@@ -97,15 +97,13 @@ export class FootLeft {
     LIBS.translateY(cylinder.MOVE_MATRIX, -0.25);
     LIBS.rotateY(cylinder.MOVE_MATRIX, LIBS.degToRad(-10));
 
-    // ujung atas (pinggul)
     LIBS.translateZ(top.MOVE_MATRIX, cylinder.height/2);
     LIBS.translateY(top.MOVE_MATRIX, -cylinder.height / 2);
     LIBS.translateX(top.MOVE_MATRIX, -0.05);
 
-    // ujung bawah (lutut)
-    LIBS.translateZ(bottom.MOVE_MATRIX, cylinder.height - 0.13);
+    LIBS.translateZ(bottom.MOVE_MATRIX, cylinder.height - 0.135);
     LIBS.translateX(bottom.MOVE_MATRIX, -0.20);
-    LIBS.translateY(bottom.MOVE_MATRIX, cylinder.height/2 + 0.02);
+    LIBS.translateY(bottom.MOVE_MATRIX, cylinder.height/2 - 0.04);
 
     // telapak kaki — agak ke depan dan miring
     LIBS.translateZ(foot.MOVE_MATRIX, cylinder.height + 0.08);
