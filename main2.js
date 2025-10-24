@@ -241,7 +241,6 @@ function main() {
     BellossomObject.setup();
 
     const GloomObject = new Gloom(GL, SHADER_PROGRAM, _position, _color, _Mmatrix, _normal);
-    // LIBS.translateZ(GloomObject.root.POSITION_MATRIX, 3);
     LIBS.translateX(GloomObject.root.POSITION_MATRIX, -5);
     LIBS.translateY(GloomObject.root.POSITION_MATRIX, -1.4);
     GloomObject.setup();
@@ -346,7 +345,7 @@ function main() {
     // Global state
     let globalTime = 0.0;
     let lastTime = 0;
-    const cameraSpeed = 20.0; // Kecepatan pergerakan (unit per detik)
+    const cameraSpeed = 5.0; // Kecepatan pergerakan (unit per detik)
 
     document.addEventListener('keydown', (event) => {
         const key = event.key.toLowerCase();

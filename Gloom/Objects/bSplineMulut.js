@@ -97,6 +97,7 @@ function generateSosisGeometry3D(spinePoints3D, radius, segments, stacks = 10) {
       binormal[0] * tangent[1] - binormal[1] * tangent[0]
     ];
 
+    // buat cincin vertext di sekitar spine point
     for (let j = 0; j <= segments; j++) {
       const angle = (j / segments) * 2 * Math.PI;
       const cx = radius * Math.cos(angle), cy = radius * Math.sin(angle);
@@ -107,7 +108,7 @@ function generateSosisGeometry3D(spinePoints3D, radius, segments, stacks = 10) {
       vertices.push(vx, vy, vz);
     }
   }
-
+  // menyambungkan 
   const ringVerts = segments + 1;
   for (let i = 0; i < spineLength - 1; i++) {
     for (let j = 0; j < segments; j++) {
@@ -157,9 +158,7 @@ function generateSosisGeometry3D(spinePoints3D, radius, segments, stacks = 10) {
   return { vertices, indices };
 }
 
-// =================================================
-// 🔹 Class utama (mulut/sosis)
-// =================================================
+// Class utama (mulut)
 export class bSplineMulut {
   GL = null; SHADER_PROGRAM = null; _position = null; _color = null; _normal = null;
   OBJECT_VERTEX = null; OBJECT_FACES = null;
@@ -208,7 +207,7 @@ export class bSplineMulut {
     const Ux = bx - ax, Uy = by - ay, Uz = bz - az;
     const Vx = cx - ax, Vy = cy - ay, Vz = cz - az;
 
-    // 🔹 balik arah normal (V × U, bukan U × V)
+    // balik arah normal (V × U, bukan U × V)
     const Nx = Vy * Uz - Vz * Uy;
     const Ny = Vz * Ux - Vx * Uz;
     const Nz = Vx * Uy - Vy * Ux;

@@ -39,10 +39,10 @@ export class Kerucut {
         const tipY = height / 2;   // puncak di atas
         const baseY = -height / 2; // alas di bawah
 
-        // ===== 1️⃣ Vertex puncak =====
+        // ===== Vertex puncak =====
         v.push(0, tipY, 0, cv[0], cv[1], cv[2], 0, 1, 0);
 
-        // ===== 2️⃣ Vertex lingkaran alas =====
+        // ===== Vertex lingkaran alas =====
         for (let i = 0; i < segments; i++) {
             const theta = (i / segments) * 2 * Math.PI;
             const x = radius * Math.cos(theta);
@@ -57,13 +57,13 @@ export class Kerucut {
             v.push(x, baseY, z, cv[0], cv[1], cv[2], nx, ny, nz);
         }
 
-        // ===== 3️⃣ Sisi kerucut =====
+        // ===== Sisi kerucut =====
         for (let i = 1; i <= segments; i++) {
             const next = (i % segments) + 1;
             f.push(0, i, next);
         }
 
-        // ===== 4️⃣ Tutup bawah (opsional) =====
+        // ===== Tutup bawah =====
         const baseCenterIndex = v.length / 9;
         v.push(0, baseY, 0, cv[0], cv[1], cv[2], 0, -1, 0);
 
